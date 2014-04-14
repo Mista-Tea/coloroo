@@ -1,6 +1,6 @@
 --[[--------------------------------------------------------------------------
 	File name:
-		coloroo.lua
+		color.lua
 	
 	Author:
 		Mista-Tea ([IJWTB Thomas])
@@ -46,11 +46,12 @@
 -- Namespace Tables
 --------------------------------------------------------------------------]]--
 
-local meta = { __index = meta, r = 255, g = 255, b = 255, a = 255 }
+local meta = { r = 255, g = 255, b = 255, a = 255 }
+meta.__index = meta
 
 local operations = {
 	table  = function( col ) return col.r, col.g, col.b, col.a end,
-	number = function( num ) return num,     num,   num, num   end,
+	number = function( num ) return num,     num,   num,   num end,
 }
 
 --[[--------------------------------------------------------------------------
@@ -79,15 +80,16 @@ local function Clamp( num )
 	return (num < 0 and 0) or (num > 255 and 255) or num
 
 end
+
 --[[----------------------------------------------------------------------]]--
 function Color( r, g, b, a )
 	
 	return setmetatable( 
 		{ 
-			r = ( r and Round( Clamp( r, 0, 255 ) ) ) or 255,
-			g = ( g and Round( Clamp( g, 0, 255 ) ) ) or 255,
-			b = ( b and Round( Clamp( b, 0, 255 ) ) ) or 255,
-			a = ( a and Round( Clamp( a, 0, 255 ) ) ) or 255 
+			r = ( r and Round( Clamp( r ) ) ) or 255,
+			g = ( g and Round( Clamp( g ) ) ) or 255,
+			b = ( b and Round( Clamp( b ) ) ) or 255,
+			a = ( a and Round( Clamp( a ) ) ) or 255 
 		}, 
 		meta 
 	)
@@ -100,138 +102,110 @@ function ColorAlpha( c, a )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__add( c1, c2 )
+function meta.__add( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c1Type ], "Attempt to add '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to add '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to add '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to add '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
 	return Color(
-		Round( Clamp( r1 + r2 ) ),
-		Round( Clamp( g1 + g2 ) ),
-		Round( Clamp( b1 + b2 ) )
-		--Round( Clamp( a1 + a2 ) )
+		r1 + r2, 
+		g1 + g2, 
+		b1 + b2 
 	)
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__sub( c1, c2 )
+function meta.__sub( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c2Type ], "Attempt to subtract '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to subtract '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to subtract '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to subtract '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 - r2 ) ),
-		Round( Clamp( g1 - g2 ) ),
-		Round( Clamp( b1 - b2 ) )
-		--Round( Clamp( a1 - a2 ) )
+	return Color( 
+		r1 - r2, 
+		g1 - g2, 
+		b1 - b2 
 	)
 
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__mul( c1, c2 )
+function meta.__mul( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c2Type ], "Attempt to multiply '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to multiply '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to multiply '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to multiply '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 		
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 * r2 ) ),
-		Round( Clamp( g1 * g2 ) ),
-		Round( Clamp( b1 * b2 ) )
-		--Round( Clamp( a1 * a2 ) )
+	return Color( 
+		r1 * r2, 
+		g1 * g2, 
+		b1 * b2 
 	)
 
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__div( c1, c2 )
+function meta.__div( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c2Type ], "Attempt to divide '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to divide '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to divide '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to divide '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 / r2 ) ),
-		Round( Clamp( g1 / g2 ) ),
-		Round( Clamp( b1 / b2 ) )
-		--Round( Clamp( a1 / a2 ) )
+	return Color( 
+		r1 / r2, 
+		g1 / g2, 
+		b1 / b2 
 	)
 
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__eq( c1, c2 )
+function meta.__eq( lhs, rhs )
 	
 	return
-		c1.r == c2.r and
-		c1.g == c2.g and
-		c1.b == c2.b --and
-		--c1.a == c2.a
-
+		lhs.r == rhs.r and
+		lhs.g == rhs.g and
+		lhs.b == rhs.b
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__gt( c1, c2 )
+function meta.__lt( lhs, rhs )
 
 	return
-		c1.r > c2.r and
-		c1.g > c2.g and
-		c1.b > c2.b --and
-		--c1.a > c2.a
+		lhs.r < rhs.r and
+		lhs.g < rhs.g and
+		lhs.b < rhs.b
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__ge( c1, c2 )
+function meta.__le( lhs, rhs )
 
 	return
-		c1.r >= c2.r and
-		c1.g >= c2.g and
-		c1.b >= c2.b --and
-		--c1.a >= c2.a
+		lhs.r <= rhs.r and
+		lhs.g <= rhs.g and
+		lhs.b <= rhs.b
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__lt( c1, c2 )
+function meta.__tostring( lhs )
 
-	return
-		c1.r < c2.r and
-		c1.g < c2.g and
-		c1.b < c2.b --and
-		--c1.a < c2.a
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta.__le( c1, c2 )
-
-	return
-		c1.r <= c2.r and
-		c1.g <= c2.g and
-		c1.b <= c2.b --and
-		--c1.a <= c2.a
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta.__tostring( c1 )
-
-	return string.format( "(%u,\t%u,\t%u,\t%u)", c1.r, c1.g, c1.b, c1.a )
+	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
 end
