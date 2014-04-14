@@ -1,6 +1,6 @@
 --[[--------------------------------------------------------------------------
 	File name:
-		color.lua
+		coloroo.lua
 	
 	Author:
 		Mista-Tea ([IJWTB Thomas])
