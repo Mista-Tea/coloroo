@@ -1,6 +1,6 @@
 --[[--------------------------------------------------------------------------
 	File name:
-		coloroo.lua
+		color.lua
 	
 	Author:
 		Mista-Tea ([IJWTB Thomas])
@@ -15,10 +15,10 @@
 		 arithmetic and relation operations.
 		
 		E.g.,
-			Color() + Color()	and	Color() + 5
-			Color() - Color()	and	Color() - 5
-			Color() * Color()	and	Color() * 5
-			Color() / Color()	and	Color() / 5
+			Color() + Color()	and		Color() + 5
+			Color() - Color()	and		Color() - 5
+			Color() * Color()	and		Color() * 5
+			Color() / Color()	and		Color() / 5
 			
 			Color() == Color()
 			Color() >  Color()
@@ -26,65 +26,65 @@
 			Color() <  Color()
 			Color() <= Color()
 		
-	***EXAMPLE #1:
-		Constructing Color objects
+		**EXAMPLE #1:
+			Constructing Color objects
+			
+			Fields that aren't supplied will default to 255. 
+			You can skip fields by supplying _ or nil as a parameter.
+			
+			Color()				==> Makes White		(255,	255,	255,	255)
+			Color( _, 0, 0 )	==> Makes Red		(255,	0,		0,		255)
+			Color( 0, _, 0 ) 	==>	Makes Green		(0,		255,	0,		255)
+			color( 0, 0, _ ) 	==>	Makes Blue		(0,		0,		255,	255)
+			
+			print( Color() )				==>	(255,	255,	255,	255)
+			print( Color( 0 ) )				==> (0,		255,	255,	255)
+			print( Color( _, 0 ) )			==> (255,	0,		255,	255)
+			print( Color( _, _, 0 ) )		==>	(255,	255,	0,		255)
+			print( Color( _, _, _, 0 ) )	==> (255,	255,	255,	0)
 		
-		Fields that aren't supplied will default to 255. 
-		You can skip fields by supplying _ or nil as a parameter.
-		
-		Color()		 ==> Makes White	(255,	255,	255,	255)
-		Color( _, 0, 0 ) ==> Makes Red		(255,	0,	0,	255)
-		Color( 0, _, 0 ) ==> Makes Green	(0,	255,	0,	255)
-		color( 0, 0, _ ) ==> Makes Blue		(0,	0,	255,	255)
-		
-		print( Color() )		==> (255,	255,	255,	255)
-		print( Color( 0 ) )		==> (0,		255,	255,	255)
-		print( Color( _, 0 ) )		==> (255,	0,	255,	255)
-		print( Color( _, _, 0 ) )	==> (255,	255,	0,	255)
-		print( Color( _, _, _, 0 ) )	==> (255,	255,	255,	0)
-	
-	***EXAMPLE #2:
-		Performing arithmetic and relational operations on 2 Color objects
+		**EXAMPLE #2:
+			Performing arithmetic and relational operations on 2 Color objects
 
-		local c1 = Color()             -- by default, this creates (r=255, g=255, b=255, a=255)
-		local c2 = Color(55, 55, 55)
-
-		print( c1 ) 	==> (255,	255,	255,	255)
-		print( c2 ) 	==> (55,	55,	55,	255)
-		
-		print( c1 + c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
-		print( c1 - c2 ) ==> (200,	200, 	200, 	255)
-		print( c1 * c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
-		print( c1 / c2 ) ==> (5, 	5, 	5, 	255) because the values are rounded to the nearest whole number
-		
-		print( c1 == c2 ) ==> false  because c1's r/g/b values are not all equal to c2's
-		
-		print( c1 >  c2 ) ==> true  because c1's r/g/b values are all greater than c2's
-		print( c1 >= c2 ) ==> true  same as above
-		
-		print( c1 <  c2 ) ==> false because c1's r/g/b values are all not less than c2's
-		print( c1 <= c2 ) ==> false same as above
+			local lhs = Color()             -- by default, this creates (r=255, g=255, b=255, a=255)
+			local rhs = Color(55, 55, 55)
 	
-	***EXAMPLE #3:
-		Performing arithmetic and relational operations on Color objects using numbers
+			print( lhs ) 		==> (255,	255,	255,	255)
+			print( rhs ) 		==> (55,	55,		55,		255)
+			
+			print( lhs + rhs ) 	==> (255,		255, 	255, 	255) because the values are clamped between 0 and 255
+			print( lhs - rhs ) 	==> (200,		200, 	200, 	255)
+			print( lhs * rhs ) 	==> (255,		255, 	255, 	255) because the values are clamped between 0 and 255
+			print( lhs / rhs ) 	==> (5, 		5, 		5, 		255) because the values are rounded to the nearest whole number
+			
+			print( lhs == rhs ) 	==> false  because lhs's r/g/b values are not all equal to rhs's
+			
+			print( lhs >  rhs )	==> true  because lhs's r/g/b values are all greater than rhs's
+			print( lhs >= rhs )	==> true  same as above
+			
+			print( lhs <  rhs )	==> false because lhs's r/g/b values are all not less than rhs's
+			print( lhs <= rhs )	==> false same as above
 		
-		local c = Color(100, 100, 100)
-		
-		print( c + 5 ) 	==> (105,	105,	105,	255)
-		print( c - 5 ) 	==> (95, 	95, 	95,	255)
-		print( c * 2 ) 	==> (200, 	200,	200,	255)
-		print( c / 2 ) 	==> (50, 	50,	50,	255)
-		
-		print( c == 5 ) ==> false because number types don't have the same __eq metamethod (will ALWAYS return false when equating with a non-table value)
-		
-		NOT SUPPORTED:
-		
-		print( c >  5 ) ==> attempt to compare number with table (not a supported operation)
-		print( c >= 5 ) ==> attempt to compare number with table (not a supported operation)
-		print( c <  5 ) ==> attempt to compare number with table (not a supported operation)
-		print( c <= 5 ) ==> attempt to compare number with table (not a supported operation)		
-		
-		
+		**EXAMPLE #3:
+			Performing arithmetic and relational operations on Color objects using numbers
+			
+			local c = Color(100, 100, 100)
+			
+			print( c + 5 ) 	==> (105,	105,	105,	255)
+			print( c - 5 ) 	==> (95, 	95, 	95,		255)
+			print( c * 2 ) 	==> (200, 	200,	200,	255)
+			print( c / 2 ) 	==> (50, 	50,		50,		255)
+			
+			print( c == 5 ) ==> false because number types don't have the same __eq metamethod (will ALWAYS return false when equating with a non-table value)
+			
+			NOT SUPPORTED:
+			
+			print( c >  5 ) ==> attempt to compare number with table (not a supported operation)
+			print( c >= 5 ) ==> attempt to compare number with table (not a supported operation)
+			print( c <  5 ) ==> attempt to compare number with table (not a supported operation)
+			print( c <= 5 ) ==> attempt to compare number with table (not a supported operation)		
+			
+			
 	License:
 		The MIT License (MIT)
 
@@ -118,14 +118,15 @@
 --------------------------------------------------------------------------]]--
 
 -- defines our metatable we'll assign to the color objects
-local meta = { __index = meta, r = 255, g = 255, b = 255, a = 255 }
+local meta = { r = 255, g = 255, b = 255, a = 255 }
+meta.__index = meta
 
 -- the list of acceptable types we can use to operate on the color object.
 -- this will return the rgba values if given a table,
 -- or return a number repeated 4 times to represent rbga values if given a number
 local operations = {
 	table  = function( col ) return col.r, col.g, col.b, col.a end,
-	number = function( num ) return num,     num,   num, num   end,
+	number = function( num ) return num,     num,   num,   num end,
 }
 
 --[[--------------------------------------------------------------------------
@@ -180,7 +181,7 @@ end
 --	Creates a new Color object.
 --
 --	You can omit any parameters you want, such as doing:
---		Color()		==> returns Color(255,255,255,255)
+--		Color()			==> returns Color(255,255,255,255)
 --		Color( _, 0 ) 	==> returns Color(255,0,255,255)
 --
 --	If any of the fields are not provided, they will default to 255.
@@ -191,10 +192,10 @@ function Color( r, g, b, a )
 	
 	return setmetatable( 
 		{ 
-			r = ( r and Round( Clamp( r, 0, 255 ) ) ) or 255,
-			g = ( g and Round( Clamp( g, 0, 255 ) ) ) or 255,
-			b = ( b and Round( Clamp( b, 0, 255 ) ) ) or 255,
-			a = ( a and Round( Clamp( a, 0, 255 ) ) ) or 255 
+			r = ( r and Round( Clamp( r ) ) ) or 255,
+			g = ( g and Round( Clamp( g ) ) ) or 255,
+			b = ( b and Round( Clamp( b ) ) ) or 255,
+			a = ( a and Round( Clamp( a ) ) ) or 255 
 		}, 
 		meta 
 	)
@@ -230,27 +231,26 @@ end
 --	Operand ordering does not matter when adding. See below for an example.
 --
 --	E.g.,
---		Color(5,5,5) + Color(5,5,5) 	==> Color(10,10,10) -- adding 5 to 5 produces 10
---		Color(5,5,5) + 5		==> Color(10,10,10) -- adding 5 to 5 produces 10
---		5 + Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue
+--		Color(5,5,5) + Color(5,5,5) ==> Color(10,10,10) -- adding 5 to 5 produces 10
+--		Color(5,5,5) + 5			==> Color(10,10,10) -- adding 5 to 5 produces 10
+--		5 + Color(5,5,5)			==> Color(10,10,10) -- we can reverse the operand ordering without issue
 --
 --]]--
-function meta.__add( c1, c2 )
+function meta.__add( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c1Type ], "Attempt to add '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to add '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to add '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to add '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
 	return Color(
-		Round( Clamp( r1 + r2 ) ),
-		Round( Clamp( g1 + g2 ) ),
-		Round( Clamp( b1 + b2 ) )
-		--Round( Clamp( a1 + a2 ) )
+		r1 + r2, 
+		g1 + g2, 
+		b1 + b2 
 	)
 	
 end
@@ -267,27 +267,26 @@ end
 --	***Operand ordering DOES matter when subtracting. See below for an example.
 --
 --	E.g.,
---		Color(5,5,5) - Color(2,2,2) 	==> Color(3,3,3) -- subtracting 2 from 5 produces 3
---		Color(5,5,5) - 2		==> Color(3,3,3) -- subtracting 2 from 5 produces 3
---		2 - Color(5,5,5)		==> Color(0,0,0) -- IMPORTANT! This tries to subtract 5 from 2 (AKA -3), which will be clamped to 0!
+--		Color(5,5,5) - Color(2,2,2) ==> Color(3,3,3) -- subtracting 2 from 5 produces 3
+--		Color(5,5,5) - 2			==> Color(3,3,3) -- subtracting 2 from 5 produces 3
+--		2 - Color(5,5,5)			==> Color(0,0,0) -- IMPORTANT! This tries to subtract 5 from 2 (AKA -3), which will be clamped to 0!
 --
 --]]--
-function meta.__sub( c1, c2 )
+function meta.__sub( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c2Type ], "Attempt to subtract '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to subtract '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to subtract '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to subtract '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 - r2 ) ),
-		Round( Clamp( g1 - g2 ) ),
-		Round( Clamp( b1 - b2 ) )
-		--Round( Clamp( a1 - a2 ) )
+	return Color( 
+		r1 - r2, 
+		g1 - g2, 
+		b1 - b2 
 	)
 
 end
@@ -304,27 +303,26 @@ end
 --	Operand ordering does not matter when multiplying. See below for an example.
 --
 --	E.g.,
---		Color(5,5,5) * Color(2,2,2) 	==> Color(10,10,10) -- multiplying 5 by 2 produces 10
---		Color(5,5,5) * 2		==> Color(10,10,10) -- multiplying 5 by 2 produces 10
---		2 * Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue 
+--		Color(5,5,5) * Color(2,2,2) ==> Color(10,10,10) -- multiplying 5 by 2 produces 10
+--		Color(5,5,5) * 2			==> Color(10,10,10) -- multiplying 5 by 2 produces 10
+--		2 * Color(5,5,5)			==> Color(10,10,10) -- we can reverse the operand ordering without issue 
 --
 --]]--
-function meta.__mul( c1, c2 )
+function meta.__mul( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c2Type ], "Attempt to multiply '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to multiply '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to multiply '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to multiply '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 		
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 * r2 ) ),
-		Round( Clamp( g1 * g2 ) ),
-		Round( Clamp( b1 * b2 ) )
-		--Round( Clamp( a1 * a2 ) )
+	return Color( 
+		r1 * r2, 
+		g1 * g2, 
+		b1 * b2 
 	)
 
 end
@@ -342,26 +340,25 @@ end
 --
 --	E.g.,
 --		Color(10,10,10) / Color(5,5,5) 	==> Color(2,2,2) -- dividing 10 by 5 produces 2
---		Color(10,10,10) / 5		==> Color(2,2,2) -- dividing 10 by 5 produces 2
---		5 / Color(10,10,10)		==> Color(1,1,1) -- IMPORTANT! This tries to divide 5 by 10 (AKA 0.5), which will be rounded up to 1!
+--		Color(10,10,10) / 5				==> Color(2,2,2) -- dividing 10 by 5 produces 2
+--		5 / Color(10,10,10)				==> Color(1,1,1) -- IMPORTANT! This tries to divide 5 by 10 (AKA 0.5), which will be rounded up to 1!
 --
 --]]--
-function meta.__div( c1, c2 )
+function meta.__div( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local lhsType = type( lhs )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c2Type ], "Attempt to divide '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to divide '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ lhsType ], "Attempt to divide '" .. tostring( lhs ) .. "' to Color object (a " .. type( lhs ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to divide '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 / r2 ) ),
-		Round( Clamp( g1 / g2 ) ),
-		Round( Clamp( b1 / b2 ) )
-		--Round( Clamp( a1 / a2 ) )
+	return Color( 
+		r1 / r2, 
+		g1 / g2, 
+		b1 / b2 
 	)
 
 end
@@ -387,72 +384,14 @@ end
 --
 --	Source: http://www.lua.org/pil/13.2.html
 --]]--
-function meta.__eq( c1, c2 )
+function meta.__eq( lhs, rhs )
 	
 	return
-		c1.r == c2.r and
-		c1.g == c2.g and
-		c1.b == c2.b --and
-		--c1.a == c2.a
-
+		lhs.r == rhs.r and
+		lhs.g == rhs.g and
+		lhs.b == rhs.b
 end
---[[--------------------------------------------------------------------------
---
--- 	color1 > color2
---
---	Defines the behavior when seeing if one color object is greater than another color object.
---
---	***This function is designed with the assumption that the color object with 
---	 larger values than the other color object will be larger overall.
---
---	***This indirectly implies that if color A's 'r' and 'g' fields are greater than
---	 the color B's 'r' and 'g', comparing A > B will return false if A's 'b' field
---	 is less than B's 'b' field. See below for an example.
---
---	E.g.,
---		Color() > Color(0,0,0)		==> true,  because 255 > 0, 255 > 0, 255 > 0
---		Color(255,255,0) > Color(0,0,1)	==> false, because A's 'b' (0) is not greater than B's 'b' (1)
---
---	As such, you should take caution when using these functions. 
---]]--
-function meta.__gt( c1, c2 )
 
-	return
-		c1.r > c2.r and
-		c1.g > c2.g and
-		c1.b > c2.b --and
-		--c1.a > c2.a
-	
-end
---[[--------------------------------------------------------------------------
---
--- 	color1 >= color2
---
---	Defines the behavior when seeing if one color object is greater than or the equal to another color object.
---
---	***This function is designed with the assumption that the color object with 
---	 larger values than the other color object will be larger overall.
---
---	***This indirectly implies that if color A's 'r' and 'g' fields are greater than
---	 the color B's 'r' and 'g', comparing A >= B will return false if A's 'b' field
---	 is less than B's 'b' field. See below for an example.
---
---	E.g.,
---		Color() >= Color()		 ==> true,  because 255 >= 255, 255 >= 255, 255 >= 255
---		Color() >= Color(0,0,0)		 ==> true,  because 255 > 0, 255 > 0, 255 > 0
---		Color(255,255,0) >= Color(0,0,1) ==> false, because A's 'b' (0) is not greater than or equal to B's 'b' (1)
---
---	As such, you should take caution when using these functions. 
---]]--
-function meta.__ge( c1, c2 )
-
-	return
-		c1.r >= c2.r and
-		c1.g >= c2.g and
-		c1.b >= c2.b --and
-		--c1.a >= c2.a
-	
-end
 --[[--------------------------------------------------------------------------
 --
 -- 	color1 < color2
@@ -467,18 +406,17 @@ end
 --	 is greater than B's 'b' field. See below for an example.
 --
 --	E.g.,
---		Color(0,0,0) < Color()		==> true,  because 0 < 255, 0 < 255, 0 < 255
+--		Color(0,0,0) < Color()			==> true,  because 0 < 255, 0 < 255, 0 < 255
 --		Color(0,0,1) < Color(255,255,0)	==> false, because A's 'b' (1) is not less than B's 'b' (0)
 --
 --	As such, you should take caution when using these functions. 
 --]]--
-function meta.__lt( c1, c2 )
+function meta.__lt( lhs, rhs )
 
 	return
-		c1.r < c2.r and
-		c1.g < c2.g and
-		c1.b < c2.b --and
-		--c1.a < c2.a
+		lhs.r < rhs.r and
+		lhs.g < rhs.g and
+		lhs.b < rhs.b
 	
 end
 --[[--------------------------------------------------------------------------
@@ -495,18 +433,17 @@ end
 --	 is greater than B's 'b' field. See below for an example.
 --
 --	E.g.,
---		Color(0,0,0) <= Color()		 ==> true,  because 0 <= 255, 0 <= 255, 0 <= 255
---		Color(0,0,1) <= Color(255,255,0) ==> false, because A's 'b' (1) is not less than or equal B's 'b' (0)
+--		Color(0,0,0) <= Color()				==> true,  because 0 <= 255, 0 <= 255, 0 <= 255
+--		Color(0,0,1) <= Color(255,255,0)	==> false, because A's 'b' (1) is not less than or equal B's 'b' (0)
 --
 --	As such, you should take caution when using these functions. 
 --]]--
-function meta.__le( c1, c2 )
+function meta.__le( lhs, rhs )
 
 	return
-		c1.r <= c2.r and
-		c1.g <= c2.g and
-		c1.b <= c2.b --and
-		--c1.a <= c2.a
+		lhs.r <= rhs.r and
+		lhs.g <= rhs.g and
+		lhs.b <= rhs.b
 	
 end
 --[[--------------------------------------------------------------------------
@@ -525,8 +462,8 @@ end
 --	Garry's:	print( Color(255,255,255) ) ==> table: 0x123abc
 --	This:		print( Color(255,255,255) ) ==>	(255,	255,	255,	255)
 --]]--
-function meta.__tostring( c1 )
+function meta.__tostring( lhs )
 
-	return string.format( "(%u,\t%u,\t%u,\t%u)", c1.r, c1.g, c1.b, c1.a )
+	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
 end
