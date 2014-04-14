@@ -26,65 +26,65 @@
 			Color() <  Color()
 			Color() <= Color()
 		
-		**EXAMPLE #1:
-			Constructing Color objects
-			
-			Fields that aren't supplied will default to 255. 
-			You can skip fields by supplying _ or nil as a parameter.
-			
-			Color()		 ==> Makes White	(255,	255,	255,	255)
-			Color( _, 0, 0 ) ==> Makes Red		(255,	0,	0,	255)
-			Color( 0, _, 0 ) ==> Makes Green	(0,	255,	0,	255)
-			color( 0, 0, _ ) ==> Makes Blue		(0,	0,	255,	255)
-			
-			print( Color() )		==> (255,	255,	255,	255)
-			print( Color( 0 ) )		==> (0,		255,	255,	255)
-			print( Color( _, 0 ) )		==> (255,	0,	255,	255)
-			print( Color( _, _, 0 ) )	==> (255,	255,	0,	255)
-			print( Color( _, _, _, 0 ) )	==> (255,	255,	255,	0)
+	***EXAMPLE #1:
+		Constructing Color objects
 		
-		**EXAMPLE #2:
-			Performing arithmetic and relational operations on 2 Color objects
-
-			local c1 = Color()             -- by default, this creates (r=255, g=255, b=255, a=255)
-			local c2 = Color(55, 55, 55)
+		Fields that aren't supplied will default to 255. 
+		You can skip fields by supplying _ or nil as a parameter.
+		
+		Color()		 ==> Makes White	(255,	255,	255,	255)
+		Color( _, 0, 0 ) ==> Makes Red		(255,	0,	0,	255)
+		Color( 0, _, 0 ) ==> Makes Green	(0,	255,	0,	255)
+		color( 0, 0, _ ) ==> Makes Blue		(0,	0,	255,	255)
+		
+		print( Color() )		==> (255,	255,	255,	255)
+		print( Color( 0 ) )		==> (0,		255,	255,	255)
+		print( Color( _, 0 ) )		==> (255,	0,	255,	255)
+		print( Color( _, _, 0 ) )	==> (255,	255,	0,	255)
+		print( Color( _, _, _, 0 ) )	==> (255,	255,	255,	0)
 	
-			print( c1 ) 	==> (255,	255,	255,	255)
-			print( c2 ) 	==> (55,	55,	55,	255)
-			
-			print( c1 + c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
-			print( c1 - c2 ) ==> (200,	200, 	200, 	255)
-			print( c1 * c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
-			print( c1 / c2 ) ==> (5, 	5, 	5, 	255) because the values are rounded to the nearest whole number
-			
-			print( c1 == c2 ) ==> false  because c1's r/g/b values are not all equal to c2's
-			
-			print( c1 >  c2 ) ==> true  because c1's r/g/b values are all greater than c2's
-			print( c1 >= c2 ) ==> true  same as above
-			
-			print( c1 <  c2 ) ==> false because c1's r/g/b values are all not less than c2's
-			print( c1 <= c2 ) ==> false same as above
+	***EXAMPLE #2:
+		Performing arithmetic and relational operations on 2 Color objects
+
+		local c1 = Color()             -- by default, this creates (r=255, g=255, b=255, a=255)
+		local c2 = Color(55, 55, 55)
+
+		print( c1 ) 	==> (255,	255,	255,	255)
+		print( c2 ) 	==> (55,	55,	55,	255)
 		
-		**EXAMPLE #3:
-			Performing arithmetic and relational operations on Color objects using numbers
-			
-			local c = Color(100, 100, 100)
-			
-			print( c + 5 ) 	==> (105,	105,	105,	255)
-			print( c - 5 ) 	==> (95, 	95, 	95,	255)
-			print( c * 2 ) 	==> (200, 	200,	200,	255)
-			print( c / 2 ) 	==> (50, 	50,	50,	255)
-			
-			print( c == 5 ) ==> false because number types don't have the same __eq metamethod (will ALWAYS return false when equating with a non-table value)
-			
-			NOT SUPPORTED:
-			
-			print( c >  5 ) ==> attempt to compare number with table (not a supported operation)
-			print( c >= 5 ) ==> attempt to compare number with table (not a supported operation)
-			print( c <  5 ) ==> attempt to compare number with table (not a supported operation)
-			print( c <= 5 ) ==> attempt to compare number with table (not a supported operation)		
-			
-			
+		print( c1 + c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
+		print( c1 - c2 ) ==> (200,	200, 	200, 	255)
+		print( c1 * c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
+		print( c1 / c2 ) ==> (5, 	5, 	5, 	255) because the values are rounded to the nearest whole number
+		
+		print( c1 == c2 ) ==> false  because c1's r/g/b values are not all equal to c2's
+		
+		print( c1 >  c2 ) ==> true  because c1's r/g/b values are all greater than c2's
+		print( c1 >= c2 ) ==> true  same as above
+		
+		print( c1 <  c2 ) ==> false because c1's r/g/b values are all not less than c2's
+		print( c1 <= c2 ) ==> false same as above
+	
+	***EXAMPLE #3:
+		Performing arithmetic and relational operations on Color objects using numbers
+		
+		local c = Color(100, 100, 100)
+		
+		print( c + 5 ) 	==> (105,	105,	105,	255)
+		print( c - 5 ) 	==> (95, 	95, 	95,	255)
+		print( c * 2 ) 	==> (200, 	200,	200,	255)
+		print( c / 2 ) 	==> (50, 	50,	50,	255)
+		
+		print( c == 5 ) ==> false because number types don't have the same __eq metamethod (will ALWAYS return false when equating with a non-table value)
+		
+		NOT SUPPORTED:
+		
+		print( c >  5 ) ==> attempt to compare number with table (not a supported operation)
+		print( c >= 5 ) ==> attempt to compare number with table (not a supported operation)
+		print( c <  5 ) ==> attempt to compare number with table (not a supported operation)
+		print( c <= 5 ) ==> attempt to compare number with table (not a supported operation)		
+		
+		
 	License:
 		The MIT License (MIT)
 
