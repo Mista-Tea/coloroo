@@ -15,10 +15,10 @@
 		 arithmetic and relation operations.
 		
 		E.g.,
-			Color() + Color()	and		Color() + 5
-			Color() - Color()	and		Color() - 5
-			Color() * Color()	and		Color() * 5
-			Color() / Color()	and		Color() / 5
+			Color() + Color()	and	Color() + 5
+			Color() - Color()	and	Color() - 5
+			Color() * Color()	and	Color() * 5
+			Color() / Color()	and	Color() / 5
 			
 			Color() == Color()
 			Color() >  Color()
@@ -32,15 +32,15 @@
 			Fields that aren't supplied will default to 255. 
 			You can skip fields by supplying _ or nil as a parameter.
 			
-			Color()				==> Makes White		(255,	255,	255,	255)
-			Color( _, 0, 0 )	==> Makes Red		(255,	0,		0,		255)
-			Color( 0, _, 0 ) 	==>	Makes Green		(0,		255,	0,		255)
-			color( 0, 0, _ ) 	==>	Makes Blue		(0,		0,		255,	255)
+			Color()			==> Makes White	(255,	255,	255,	255)
+			Color( _, 0, 0 )	==> Makes Red	(255,	0,	0,	255)
+			Color( 0, _, 0 ) 	==> Makes Green	(0,	255,	0,	255)
+			color( 0, 0, _ ) 	==> Makes Blue	(0,	0,	255,	255)
 			
-			print( Color() )				==>	(255,	255,	255,	255)
-			print( Color( 0 ) )				==> (0,		255,	255,	255)
-			print( Color( _, 0 ) )			==> (255,	0,		255,	255)
-			print( Color( _, _, 0 ) )		==>	(255,	255,	0,		255)
+			print( Color() )		==> (255,	255,	255,	255)
+			print( Color( 0 ) )		==> (0,		255,	255,	255)
+			print( Color( _, 0 ) )		==> (255,	0,	255,	255)
+			print( Color( _, _, 0 ) )	==> (255,	255,	0,	255)
 			print( Color( _, _, _, 0 ) )	==> (255,	255,	255,	0)
 		
 		**EXAMPLE #2:
@@ -50,12 +50,12 @@
 			local rhs = Color(55, 55, 55)
 	
 			print( lhs ) 		==> (255,	255,	255,	255)
-			print( rhs ) 		==> (55,	55,		55,		255)
+			print( rhs ) 		==> (55,	55,	55,	255)
 			
-			print( lhs + rhs ) 	==> (255,		255, 	255, 	255) because the values are clamped between 0 and 255
-			print( lhs - rhs ) 	==> (200,		200, 	200, 	255)
-			print( lhs * rhs ) 	==> (255,		255, 	255, 	255) because the values are clamped between 0 and 255
-			print( lhs / rhs ) 	==> (5, 		5, 		5, 		255) because the values are rounded to the nearest whole number
+			print( lhs + rhs ) 	==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
+			print( lhs - rhs ) 	==> (200,	200, 	200, 	255)
+			print( lhs * rhs ) 	==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
+			print( lhs / rhs ) 	==> (5, 	5, 	5,	255) because the values are rounded to the nearest whole number
 			
 			print( lhs == rhs ) 	==> false  because lhs's r/g/b values are not all equal to rhs's
 			
@@ -71,9 +71,9 @@
 			local c = Color(100, 100, 100)
 			
 			print( c + 5 ) 	==> (105,	105,	105,	255)
-			print( c - 5 ) 	==> (95, 	95, 	95,		255)
+			print( c - 5 ) 	==> (95, 	95, 	95,	255)
 			print( c * 2 ) 	==> (200, 	200,	200,	255)
-			print( c / 2 ) 	==> (50, 	50,		50,		255)
+			print( c / 2 ) 	==> (50, 	50,	50,	255)
 			
 			print( c == 5 ) ==> false because number types don't have the same __eq metamethod (will ALWAYS return false when equating with a non-table value)
 			
@@ -181,7 +181,7 @@ end
 --	Creates a new Color object.
 --
 --	You can omit any parameters you want, such as doing:
---		Color()			==> returns Color(255,255,255,255)
+--		Color()		==> returns Color(255,255,255,255)
 --		Color( _, 0 ) 	==> returns Color(255,0,255,255)
 --
 --	If any of the fields are not provided, they will default to 255.
@@ -231,9 +231,9 @@ end
 --	Operand ordering does not matter when adding. See below for an example.
 --
 --	E.g.,
---		Color(5,5,5) + Color(5,5,5) ==> Color(10,10,10) -- adding 5 to 5 produces 10
---		Color(5,5,5) + 5			==> Color(10,10,10) -- adding 5 to 5 produces 10
---		5 + Color(5,5,5)			==> Color(10,10,10) -- we can reverse the operand ordering without issue
+--		Color(5,5,5) + Color(5,5,5) 	==> Color(10,10,10) -- adding 5 to 5 produces 10
+--		Color(5,5,5) + 5		==> Color(10,10,10) -- adding 5 to 5 produces 10
+--		5 + Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue
 --
 --]]--
 function meta.__add( lhs, rhs )
@@ -267,9 +267,9 @@ end
 --	***Operand ordering DOES matter when subtracting. See below for an example.
 --
 --	E.g.,
---		Color(5,5,5) - Color(2,2,2) ==> Color(3,3,3) -- subtracting 2 from 5 produces 3
---		Color(5,5,5) - 2			==> Color(3,3,3) -- subtracting 2 from 5 produces 3
---		2 - Color(5,5,5)			==> Color(0,0,0) -- IMPORTANT! This tries to subtract 5 from 2 (AKA -3), which will be clamped to 0!
+--		Color(5,5,5) - Color(2,2,2) 	==> Color(3,3,3) -- subtracting 2 from 5 produces 3
+--		Color(5,5,5) - 2		==> Color(3,3,3) -- subtracting 2 from 5 produces 3
+--		2 - Color(5,5,5)		==> Color(0,0,0) -- IMPORTANT! This tries to subtract 5 from 2 (AKA -3), which will be clamped to 0!
 --
 --]]--
 function meta.__sub( lhs, rhs )
@@ -303,9 +303,9 @@ end
 --	Operand ordering does not matter when multiplying. See below for an example.
 --
 --	E.g.,
---		Color(5,5,5) * Color(2,2,2) ==> Color(10,10,10) -- multiplying 5 by 2 produces 10
---		Color(5,5,5) * 2			==> Color(10,10,10) -- multiplying 5 by 2 produces 10
---		2 * Color(5,5,5)			==> Color(10,10,10) -- we can reverse the operand ordering without issue 
+--		Color(5,5,5) * Color(2,2,2) 	==> Color(10,10,10) -- multiplying 5 by 2 produces 10
+--		Color(5,5,5) * 2		==> Color(10,10,10) -- multiplying 5 by 2 produces 10
+--		2 * Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue 
 --
 --]]--
 function meta.__mul( lhs, rhs )
@@ -339,9 +339,9 @@ end
 --	***Operand ordering DOES matter when dividing. See below for an example.
 --
 --	E.g.,
---		Color(10,10,10) / Color(5,5,5) 	==> Color(2,2,2) -- dividing 10 by 5 produces 2
---		Color(10,10,10) / 5				==> Color(2,2,2) -- dividing 10 by 5 produces 2
---		5 / Color(10,10,10)				==> Color(1,1,1) -- IMPORTANT! This tries to divide 5 by 10 (AKA 0.5), which will be rounded up to 1!
+--		Color(10,10,10) / Color(5,5,5) 		==> Color(2,2,2) -- dividing 10 by 5 produces 2
+--		Color(10,10,10) / 5			==> Color(2,2,2) -- dividing 10 by 5 produces 2
+--		5 / Color(10,10,10)			==> Color(1,1,1) -- IMPORTANT! This tries to divide 5 by 10 (AKA 0.5), which will be rounded up to 1!
 --
 --]]--
 function meta.__div( lhs, rhs )
@@ -406,7 +406,7 @@ end
 --	 is greater than B's 'b' field. See below for an example.
 --
 --	E.g.,
---		Color(0,0,0) < Color()			==> true,  because 0 < 255, 0 < 255, 0 < 255
+--		Color(0,0,0) < Color()		==> true,  because 0 < 255, 0 < 255, 0 < 255
 --		Color(0,0,1) < Color(255,255,0)	==> false, because A's 'b' (1) is not less than B's 'b' (0)
 --
 --	As such, you should take caution when using these functions. 
@@ -433,8 +433,8 @@ end
 --	 is greater than B's 'b' field. See below for an example.
 --
 --	E.g.,
---		Color(0,0,0) <= Color()				==> true,  because 0 <= 255, 0 <= 255, 0 <= 255
---		Color(0,0,1) <= Color(255,255,0)	==> false, because A's 'b' (1) is not less than or equal B's 'b' (0)
+--		Color(0,0,0) <= Color()			=> true,  because 0 <= 255, 0 <= 255, 0 <= 255
+--		Color(0,0,1) <= Color(255,255,0)	=> false, because A's 'b' (1) is not less than or equal B's 'b' (0)
 --
 --	As such, you should take caution when using these functions. 
 --]]--
