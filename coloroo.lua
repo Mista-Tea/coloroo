@@ -46,24 +46,24 @@
 	***EXAMPLE #2:
 		Performing arithmetic and relational operations on 2 Color objects
 
-		local c1 = Color()             -- by default, this creates (r=255, g=255, b=255, a=255)
-		local c2 = Color(55, 55, 55)
+		local lhs = Color()             -- by default, this creates (r=255, g=255, b=255, a=255)
+		local rhs = Color(55, 55, 55)
 
-		print( c1 ) 	==> (255,	255,	255,	255)
-		print( c2 ) 	==> (55,	55,	55,	255)
+		print( lhs ) 	==> (255,	255,	255,	255)
+		print( rhs ) 	==> (55,	55,	55,	255)
 		
-		print( c1 + c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
-		print( c1 - c2 ) ==> (200,	200, 	200, 	255)
-		print( c1 * c2 ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
-		print( c1 / c2 ) ==> (5, 	5, 	5, 	255) because the values are rounded to the nearest whole number
+		print( lhs + rhs ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
+		print( lhs - rhs ) ==> (200,	200, 	200, 	255)
+		print( lhs * rhs ) ==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
+		print( lhs / rhs ) ==> (5, 	5, 	5, 	255) because the values are rounded to the nearest whole number
 		
-		print( c1 == c2 ) ==> false  because c1's r/g/b values are not all equal to c2's
+		print( lhs == rhs ) ==> false  because lhs's r/g/b values are not all equal to rhs's
 		
-		print( c1 >  c2 ) ==> true  because c1's r/g/b values are all greater than c2's
-		print( c1 >= c2 ) ==> true  same as above
+		print( lhs >  rhs ) ==> true  because lhs's r/g/b values are all greater than rhs's
+		print( lhs >= rhs ) ==> true  same as above
 		
-		print( c1 <  c2 ) ==> false because c1's r/g/b values are all not less than c2's
-		print( c1 <= c2 ) ==> false same as above
+		print( lhs <  rhs ) ==> false because lhs's r/g/b values are all not less than rhs's
+		print( lhs <= rhs ) ==> false same as above
 	
 	***EXAMPLE #3:
 		Performing arithmetic and relational operations on Color objects using numbers
@@ -118,7 +118,8 @@
 --------------------------------------------------------------------------]]--
 
 -- defines our metatable we'll assign to the color objects
-local meta = { __index = meta, r = 255, g = 255, b = 255, a = 255 }
+local meta = { r = 255, g = 255, b = 255, a = 255 }
+meta.__index = meta
 
 -- the list of acceptable types we can use to operate on the color object.
 -- this will return the rgba values if given a table,
@@ -191,10 +192,10 @@ function Color( r, g, b, a )
 	
 	return setmetatable( 
 		{ 
-			r = ( r and Round( Clamp( r, 0, 255 ) ) ) or 255,
-			g = ( g and Round( Clamp( g, 0, 255 ) ) ) or 255,
-			b = ( b and Round( Clamp( b, 0, 255 ) ) ) or 255,
-			a = ( a and Round( Clamp( a, 0, 255 ) ) ) or 255 
+			r = ( r and Round( Clamp( r ) ) ),
+			g = ( g and Round( Clamp( g ) ) ),
+			b = ( b and Round( Clamp( b ) ) ),
+			a = ( a and Round( Clamp( a ) ) ) 
 		}, 
 		meta 
 	)
@@ -235,23 +236,16 @@ end
 --		5 + Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue
 --
 --]]--
-function meta.__add( c1, c2 )
+function meta.__add( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c1Type ], "Attempt to add '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to add '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to add '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 + r2 ) ),
-		Round( Clamp( g1 + g2 ) ),
-		Round( Clamp( b1 + b2 ) )
-		--Round( Clamp( a1 + a2 ) )
-	)
+	return Color( r1 + r2, g1 + g2, b1 + b2 )
 	
 end
 --[[--------------------------------------------------------------------------
@@ -272,23 +266,16 @@ end
 --		2 - Color(5,5,5)		==> Color(0,0,0) -- IMPORTANT! This tries to subtract 5 from 2 (AKA -3), which will be clamped to 0!
 --
 --]]--
-function meta.__sub( c1, c2 )
+function meta.__sub( lhs, rhs )
+
+	local rhsType = type( rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	assert( operations[ rhsType ], "Attempt to subtract '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	assert( operations[ c2Type ], "Attempt to subtract '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to subtract '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
-	
-	return Color(
-		Round( Clamp( r1 - r2 ) ),
-		Round( Clamp( g1 - g2 ) ),
-		Round( Clamp( b1 - b2 ) )
-		--Round( Clamp( a1 - a2 ) )
-	)
+	return Color( r1 - r2, g1 - g2, b1 - b2 )
 
 end
 --[[--------------------------------------------------------------------------
@@ -309,23 +296,16 @@ end
 --		2 * Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue 
 --
 --]]--
-function meta.__mul( c1, c2 )
+function meta.__mul( lhs, rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	local rhsType = type( rhs )
 	
-	assert( operations[ c2Type ], "Attempt to multiply '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to multiply '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	assert( operations[ rhsType ], "Attempt to multiply '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 		
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	return Color(
-		Round( Clamp( r1 * r2 ) ),
-		Round( Clamp( g1 * g2 ) ),
-		Round( Clamp( b1 * b2 ) )
-		--Round( Clamp( a1 * a2 ) )
-	)
+	return Color(r1 * r2 ,g1 * g2 ,b1 * b2)
 
 end
 --[[--------------------------------------------------------------------------
@@ -346,23 +326,16 @@ end
 --		5 / Color(10,10,10)		==> Color(1,1,1) -- IMPORTANT! This tries to divide 5 by 10 (AKA 0.5), which will be rounded up to 1!
 --
 --]]--
-function meta.__div( c1, c2 )
+function meta.__div( lhs, rhs )
+
+	local rhsType = type( rhs )
 	
-	local c1Type = type( c1 )
-	local c2Type = type( c2 )
+	assert( operations[ rhsType ], "Attempt to divide '" .. tostring( rhs ) .. "' to Color object (a " .. type( rhs ) .. " value)" )
 	
-	assert( operations[ c2Type ], "Attempt to divide '" .. tostring( c1 ) .. "' to Color object (a " .. type( c1 ) .. " value)" )
-	assert( operations[ c2Type ], "Attempt to divide '" .. tostring( c2 ) .. "' to Color object (a " .. type( c2 ) .. " value)" )
+	local r1, g1, b1, a1 = operations[ lhsType ]( lhs )
+	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
-	local r1, g1, b1, a1 = operations[ c1Type ]( c1 )
-	local r2, g2, b2, a2 = operations[ c2Type ]( c2 )
-	
-	return Color(
-		Round( Clamp( r1 / r2 ) ),
-		Round( Clamp( g1 / g2 ) ),
-		Round( Clamp( b1 / b2 ) )
-		--Round( Clamp( a1 / a2 ) )
-	)
+	return Color( r1 / r2, g1 / g2, b1 / b2 )
 
 end
 --[[--------------------------------------------------------------------------
@@ -387,72 +360,16 @@ end
 --
 --	Source: http://www.lua.org/pil/13.2.html
 --]]--
-function meta.__eq( c1, c2 )
+function meta.__eq( lhs, rhs )
 	
 	return
-		c1.r == c2.r and
-		c1.g == c2.g and
-		c1.b == c2.b --and
-		--c1.a == c2.a
+		lhs.r == rhs.r and
+		lhs.g == rhs.g and
+		lhs.b == rhs.b --and
+		--lhs.a == rhs.a
 
 end
---[[--------------------------------------------------------------------------
---
--- 	color1 > color2
---
---	Defines the behavior when seeing if one color object is greater than another color object.
---
---	***This function is designed with the assumption that the color object with 
---	 larger values than the other color object will be larger overall.
---
---	***This indirectly implies that if color A's 'r' and 'g' fields are greater than
---	 the color B's 'r' and 'g', comparing A > B will return false if A's 'b' field
---	 is less than B's 'b' field. See below for an example.
---
---	E.g.,
---		Color() > Color(0,0,0)		==> true,  because 255 > 0, 255 > 0, 255 > 0
---		Color(255,255,0) > Color(0,0,1)	==> false, because A's 'b' (0) is not greater than B's 'b' (1)
---
---	As such, you should take caution when using these functions. 
---]]--
-function meta.__gt( c1, c2 )
 
-	return
-		c1.r > c2.r and
-		c1.g > c2.g and
-		c1.b > c2.b --and
-		--c1.a > c2.a
-	
-end
---[[--------------------------------------------------------------------------
---
--- 	color1 >= color2
---
---	Defines the behavior when seeing if one color object is greater than or the equal to another color object.
---
---	***This function is designed with the assumption that the color object with 
---	 larger values than the other color object will be larger overall.
---
---	***This indirectly implies that if color A's 'r' and 'g' fields are greater than
---	 the color B's 'r' and 'g', comparing A >= B will return false if A's 'b' field
---	 is less than B's 'b' field. See below for an example.
---
---	E.g.,
---		Color() >= Color()		 ==> true,  because 255 >= 255, 255 >= 255, 255 >= 255
---		Color() >= Color(0,0,0)		 ==> true,  because 255 > 0, 255 > 0, 255 > 0
---		Color(255,255,0) >= Color(0,0,1) ==> false, because A's 'b' (0) is not greater than or equal to B's 'b' (1)
---
---	As such, you should take caution when using these functions. 
---]]--
-function meta.__ge( c1, c2 )
-
-	return
-		c1.r >= c2.r and
-		c1.g >= c2.g and
-		c1.b >= c2.b --and
-		--c1.a >= c2.a
-	
-end
 --[[--------------------------------------------------------------------------
 --
 -- 	color1 < color2
@@ -472,13 +389,13 @@ end
 --
 --	As such, you should take caution when using these functions. 
 --]]--
-function meta.__lt( c1, c2 )
+function meta.__lt( lhs, rhs )
 
 	return
-		c1.r < c2.r and
-		c1.g < c2.g and
-		c1.b < c2.b --and
-		--c1.a < c2.a
+		lhs.r < rhs.r and
+		lhs.g < rhs.g and
+		lhs.b < rhs.b --and
+		--lhs.a < rhs.a
 	
 end
 --[[--------------------------------------------------------------------------
@@ -500,13 +417,13 @@ end
 --
 --	As such, you should take caution when using these functions. 
 --]]--
-function meta.__le( c1, c2 )
+function meta.__le( lhs, rhs )
 
 	return
-		c1.r <= c2.r and
-		c1.g <= c2.g and
-		c1.b <= c2.b --and
-		--c1.a <= c2.a
+		lhs.r <= rhs.r and
+		lhs.g <= rhs.g and
+		lhs.b <= rhs.b --and
+		--lhs.a <= rhs.a
 	
 end
 --[[--------------------------------------------------------------------------
@@ -525,8 +442,8 @@ end
 --	Garry's:	print( Color(255,255,255) ) ==> table: 0x123abc
 --	This:		print( Color(255,255,255) ) ==>	(255,	255,	255,	255)
 --]]--
-function meta.__tostring( c1 )
+function meta.__tostring( lhs )
 
-	return string.format( "(%u,\t%u,\t%u,\t%u)", c1.r, c1.g, c1.b, c1.a )
+	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
 end
