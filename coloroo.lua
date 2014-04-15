@@ -8,12 +8,12 @@
 	File description:
 		An object-oriented approach to using the Color() function. We've all
 		 probably had instances where we wish we could quickly perform operations
-		 on colors without having to make custom or expensive functions to do it.
+		 on Colors without having to make custom or expensive functions to do it.
 		 		 
-		This script will allow you to use +, -, *, /, ==, >, >=, <, and <= on existing colors
+		This script will allow you to use +, -, *, /, ==, >, >=, <, and <= on existing Colors
 		 by overriding the default Color() function to return an object whose metatable supports
 		 arithmetic and relation operations.
-
+			
 	License:
 		The MIT License (MIT)
 
@@ -38,17 +38,24 @@
 		SOFTWARE.
 
 	Changelog:
-		- Created April 12th, 2014
-		- Added to GitHub April 14th, 2014
+		- April 12th, 2014:	Created
+		- April 14th, 2014: 	Added to GitHub
+		- April 15th, 2014:		
+			Added support for converting between RGB and HSV color spaces
+			Added  Set*, Add*, and Sub* convenience functions
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
 -- Namespace Tables
 --------------------------------------------------------------------------]]--
 
-local meta = { r = 255, g = 255, b = 255, a = 255 }
+-- defines our metatable we'll assign to the Color objects
+local meta = { r = 255, g = 255, b = 255, a = 255, h = 0, s = 0, v = 1 }
 meta.__index = meta
 
+-- the list of acceptable types we can use to operate on the Color object.
+-- this will return the rgba values if given a table,
+-- or return a number repeated 4 times to represent rbga values if given a number
 local operations = {
 	table  = function( col ) return col.r, col.g, col.b, col.a end,
 	number = function( num ) return num,     num,   num,   num end,
@@ -80,7 +87,6 @@ local function Clamp( num )
 	return (num < 0 and 0) or (num > 255 and 255) or num
 
 end
-
 --[[----------------------------------------------------------------------]]--
 function Color( r, g, b, a )
 	
@@ -98,10 +104,104 @@ end
 --[[----------------------------------------------------------------------]]--
 function ColorAlpha( c, a )
 
-	return Color( c.r, c.g, c.b, a )
+	return c:SetA( a )
+	
+end
+--[[--------------------------------------------------------------------------
+-- Convenience Functions
+--------------------------------------------------------------------------]]--
+function meta:SetAlpha( a )
+	
+	return self:SetA( a )
 	
 end
 --[[----------------------------------------------------------------------]]--
+function meta:SetR( r )
+
+	self.r = Round( Clamp( r ) )
+	return self
+
+end
+--[[----------------------------------------------------------------------]]--
+function meta:SetG( g )
+	
+	self.g = Round( Clamp( g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:SetB( b )
+
+	self.b = Round( Clamp( b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:SetA( a )
+
+	self.a = Round( Clamp( a ) )
+	return self
+
+end
+--[[----------------------------------------------------------------------]]--
+function meta:AddR( r )
+	
+	self.r = Round( Clamp( self.r + r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:AddG( g )
+	
+	self.g = Round( Clamp( self.g + g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:AddB( b )
+	
+	self.b = Round( Clamp( self.b + b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:AddA( a )
+	
+	self.a = Round( Clamp( self.a + a ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:SubR( r )
+
+	self.r = Round( Clamp( self.r - r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:SubG( g )
+
+	self.g = Round( Clamp( self.g - g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:SubB( b )
+
+	self.b = Round( Clamp( self.b - b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:SubA( a )
+
+	self.a = Round( Clamp( self.a - a ) )
+	return self
+	
+end
+--[[--------------------------------------------------------------------------
+-- Arithmetic Functions
+--------------------------------------------------------------------------]]--
 function meta.__add( lhs, rhs )
 	
 	local lhsType = type( lhs )
@@ -177,7 +277,9 @@ function meta.__div( lhs, rhs )
 	)
 
 end
---[[----------------------------------------------------------------------]]--
+--[[--------------------------------------------------------------------------
+-- Relational Functions
+--------------------------------------------------------------------------]]--
 function meta.__eq( lhs, rhs )
 	
 	return
@@ -194,7 +296,7 @@ function meta.__lt( lhs, rhs )
 		lhs.b < rhs.b
 	
 end
---[[----------------------------------------------------------------------]]--
+
 function meta.__le( lhs, rhs )
 
 	return
@@ -203,9 +305,106 @@ function meta.__le( lhs, rhs )
 		lhs.b <= rhs.b
 	
 end
---[[----------------------------------------------------------------------]]--
+--[[--------------------------------------------------------------------------
+-- String Functions
+--------------------------------------------------------------------------]]--
 function meta.__tostring( lhs )
 
 	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
+end
+--[[--------------------------------------------------------------------------
+-- HSV <==> RGB Conversion Functions
+--------------------------------------------------------------------------]]--
+function meta:ToHSV()
+
+	r = self.r / 255 
+	g = self.g / 255 
+	b = self.b / 255 
+	a = self.a
+	
+	local max = math.max(r, g, b)
+	local min = math.min(r, g, b)
+	
+	local h, s, v = 0, 0, max
+
+	local delta = max - min
+		
+	if ( max == 0 ) then
+		return h, s, v, a
+	else
+		s = delta / max
+	end
+	
+	if ( min == max ) then 
+		h = 0
+	else
+		if     ( r == max ) then h =     ( g - b ) / delta
+		elseif ( g == max ) then h = 2 + ( b - r ) / delta
+		else                     h = 4 + ( r - g ) / delta
+		end
+		
+		h = h * 60
+		h = ( h < 0 and (h + 360) ) or h
+	end
+	
+	return h, s, v, a
+	
+end
+--[[----------------------------------------------------------------------]]--
+local sectors = {
+	[0] = function( v, p, q, t ) return v, t, p end,
+	[1] = function( v, p, q, t ) return q, v, p end,
+	[2] = function( v, p, q, t ) return p, v, t end,
+	[3] = function( v, p, q, t ) return p, q, v end,
+	[4] = function( v, p, q, t ) return t, p, v end,
+	[5] = function( v, p, q, t ) return v, p, q end,
+}
+
+function HSVToColor( h, s, v, a )
+	
+	local r, g, b
+	
+	if ( s == 0 ) then
+	
+		r, g, b = v, v, v
+		
+	else
+
+		h = h / 60
+		local i = math.floor( h )
+		local f = h - i
+		local p = v * ( 1 - s )
+		local q = v * ( 1 - s * f )
+		local t = v * ( 1 - s * ( 1 - f ) )
+		
+		i = i % 6
+		
+		r, g, b = sectors[ i ]( v, p, q, t )
+	
+	end
+	
+	return Color( r*255, g*255, b*255, a )
+	
+end
+--[[----------------------------------------------------------------------]]--
+function ColorToHSV( color )
+
+	return color:ToHSV()
+	
+end
+--[[----------------------------------------------------------------------]]--
+function HSVToRGB( h, s, v, a )
+
+	local c = HSVToColor( h, s, v, a )
+
+	return c.r, c.g, c.b, c.a
+	
+end
+
+--[[----------------------------------------------------------------------]]--
+function RGBToHSV( r, g, b, a )
+
+	return Color( r, g, b, a ):ToHSV()
+	
 end
