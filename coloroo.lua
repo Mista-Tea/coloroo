@@ -59,10 +59,10 @@
 			
 			print( lhs == rhs ) 	==> false  because lhs's r/g/b values are not all equal to rhs's
 			
-			print( lhs >  rhs )	==> true  because lhs's r/g/b values are all greater than rhs's
+			print( lhs >  rhs )	==> true  because lhs's V (lightness) value when converted to HSV is greater than rhs's
 			print( lhs >= rhs )	==> true  same as above
 			
-			print( lhs <  rhs )	==> false because lhs's r/g/b values are all not less than rhs's
+			print( lhs <  rhs )	==> false because lhs's V (lightness) value when converted to HSV is greater than rhs's
 			print( lhs <= rhs )	==> false same as above
 		
 		**EXAMPLE #3:
@@ -113,7 +113,10 @@
 		- April 14th, 2014: 	Added to GitHub
 		- April 15th, 2014:		
 			Added support for converting between RGB and HSV color spaces
-			Added  Set*, Add*, and Sub* convenience functions
+			Added ColorObj:Set*, Add*, and Sub* convenience functions
+		- April 16th, 2014:
+			Added ColorObj:Copy()
+			Added ColorObj:Mul* and Div* convenience functions
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
@@ -177,8 +180,6 @@ local function Clamp( num )
 
 end
 
-
-
 --[[--------------------------------------------------------------------------
 --
 -- 	Color( number=255, number=255, number=255, number=255 )
@@ -206,8 +207,31 @@ function Color( r, g, b, a )
 	)
 	
 end
+--[[--------------------------------------------------------------------------
+-- Convenience Functions
+--------------------------------------------------------------------------]]--
 
+--[[--------------------------------------------------------------------------
+--
+-- 	ColorObj:Copy()
+--
+--	Returns a copy of the Color object that can be modified without affecting
+--	 the original Color object.
+--
+--	E.g.,
+--		BAD:
+--		local color1 = Color()
+--		local color2 = color1:SubA( 255 ) -- WRONG! color1 and color2 now point to the same object!
+--
+--		GOOD:
+--		local color1 = Color()
+--		local color2 = color1:Copy():SubA( 255 ) -- CORRECT! color1 and color2 are independent objects
+--]]--
+function meta:Copy()
 
+	return Color( self.r, self.g, self.b, self.a )
+
+end
 
 --[[--------------------------------------------------------------------------
 --
@@ -215,18 +239,18 @@ end
 --
 --	A replacement for Garry's ColorAlpha function. 
 --
---	This now acts as a wrapper function for meta:SetA(), which directly 
+--	This now acts as a wrapper function for ColorObj:SetA(), which directly 
 --	 modifies the Color object's alpha value.
 --]]--
-function ColorAlpha( c, a )
+function ColorAlpha( color, a )
 
-	return c:SetA( a )
+	return color:SetA( a )
 	
 end
 
 --[[--------------------------------------------------------------------------
 --
--- 	meta:SetAlpha( number )
+-- 	ColorObj:SetAlpha( number )
 --
 --	Wrapper function for Color():SetA()
 --
@@ -239,14 +263,28 @@ function meta:SetAlpha( a )
 	
 end
 
-
+--[[--------------------------------------------------------------------------
+-- Setting Functions
+--------------------------------------------------------------------------]]--
 
 --[[--------------------------------------------------------------------------
 --
--- 	meta:SetR( number )
+-- 	ColorObj:SetR( number )
+--	ColorObj:SetG( number )
+--	ColorObj:SetB( number )
+--	ColorObj:SetA( number )
 --
---	Sets this Color's 'r' value to the given number, rounded to the nearest whole number
---	 and clamped between 0 and 255.
+--	Sets the Color object's corresponding RGBA value to the given number,
+--	 clamped between 0 - 255 and rounded to the nearest whole number.
+--
+--	Returns the Color object.
+--
+--		print( Color():SetR( 0 ) ) 	==>	(0,	255,	255,	255)
+--	
+--	Equivalent to:
+--
+--		local color1 = Color()
+--		print( color1:SetR( 0 ) ) 	==>	(0,	255,	255,	255)
 --]]--
 function meta:SetR( r )
 
@@ -254,42 +292,21 @@ function meta:SetR( r )
 	return self
 
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:SetG( number )
---
---	Sets this Color's 'g' value to the given number, rounded to the nearest whole number
---	 and clamped between 0 and 255.
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:SetG( g )
 	
 	self.g = Round( Clamp( g ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:SetB( number )
---
---	Sets this Color's 'b' value to the given number, rounded to the nearest whole number
---	 and clamped between 0 and 255.
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:SetB( b )
 
 	self.b = Round( Clamp( b ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:SetA( number )
---
---	Sets this Color's 'a' value to the given number, rounded to the nearest whole number
---	 and clamped between 0 and 255.
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:SetA( a )
 
 	self.a = Round( Clamp( a ) )
@@ -297,141 +314,251 @@ function meta:SetA( a )
 
 end
 
-
-
+--[[--------------------------------------------------------------------------
+-- Addition Functions
+--------------------------------------------------------------------------]]--
 
 --[[--------------------------------------------------------------------------
 --
--- 	meta:AddR( number )
+-- 	ColorObj:AddR( number )
+--	ColorObj:AddG( number )
+--	ColorObj:AddB( number )
+--	ColorObj:AddA( number )
 --
---	Increments this Color's 'r' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
+--	Adds the given number to the Color object's corresponding RGBA value.
+--	 The result after the addition operation is clamped between 0 - 255 
+--	 and rounded to the nearest whole number.
 --
---	print( Color( 0, 0, 0 ):AddR( 255 ) ) ==> (255,	0,	0,	255)
+--	Returns the Color object.
+--
+--		print( Color(0,0,0):AddR( 55 ) ) 	==>	(55,	0,	0,	255)
+--	
+--	Equivalent to:
+--
+--		local color1 = Color(0,0,0)
+--		print( color1:AddR( 55 ) ) 		==>	(55,	0,	0,	0)
 --]]--
 function meta:AddR( r )
+	
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 	
 	self.r = Round( Clamp( self.r + r ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:AddG( number )
---
---	Increments this Color's 'g' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
---
---	print( Color( 0, 0, 0 ):AddG( 255 ) ) ==> (0,	255,	0,	255)
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:AddG( g )
+
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
 	self.g = Round( Clamp( self.g + g ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:AddB( number )
---
---	Increments this Color's 'b' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
---
---	print( Color( 0, 0, 0 ):AddR( 255 ) ) ==> (0,	0,	255,	255)
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:AddB( b )
+	
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
 	self.b = Round( Clamp( self.b + b ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:AddA( number )
---
---	Increments this Color's 'a' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
---
---	print( Color( 0, 0, 0, 0 ):AddA( 255 ) ) ==> (0,	0,	0,	255)
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:AddA( a )
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
 	self.a = Round( Clamp( self.a + a ) )
 	return self
 	
 end
 
-
-
+--[[--------------------------------------------------------------------------
+-- Subtraction Functions
+--------------------------------------------------------------------------]]--
 
 --[[--------------------------------------------------------------------------
 --
--- 	meta:SubR( number )
+-- 	ColorObj:SubR( number )
+--	ColorObj:SubG( number )
+--	ColorObj:SubB( number )
+--	ColorObj:SubA( number )
 --
---	Decrements this Color's 'a' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
+--	Subtracts the given number from the Color object's corresponding RGBA value.
+--	 The result after the subtraction operation is clamped between 0 - 255 
+--	 and rounded to the nearest whole number.
 --
---	print( Color():SubR( 255 ) ) ==> (0,	255,	255,	255)
+--	Returns the Color object.
+--
+--		print( Color():SubR( 55 ) ) 	==>	(200,	255,	255,	255)
+--	
+--	Equivalent to:
+--
+--		local color1 = Color()
+--		print( color1:SubR( 55 ) ) 	==>	(200,	255,	255,	255)
 --]]--
 function meta:SubR( r )
+
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
 	self.r = Round( Clamp( self.r - r ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:SubG( number )
---
---	Decrements this Color's 'a' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
---
---	print( Color():SubG( 255 ) ) ==> (255,	0,	255,	255)
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:SubG( g )
-
+	
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	
 	self.g = Round( Clamp( self.g - g ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:SubB( number )
---
---	Decrements this Color's 'a' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
---
---	print( Color():SubB( 255 ) ) ==> (255,	255,	0,	255)
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:SubB( b )
 
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	
 	self.b = Round( Clamp( self.b - b ) )
 	return self
 	
 end
-
---[[--------------------------------------------------------------------------
---
--- 	meta:SubA( number )
---
---	Decrements this Color's 'a' value by the given number, rounded to the 
---	 nearest whole number and clamped between 0 and 255.
---
---	print( Color():SubA( 255 ) ) ==> (255,	255,	255,	0)
---]]--
+--[[----------------------------------------------------------------------]]--
 function meta:SubA( a )
-
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	
 	self.a = Round( Clamp( self.a - a ) )
 	return self
 	
 end
 
+--[[--------------------------------------------------------------------------
+-- Multiplication Functions
+--------------------------------------------------------------------------]]--
 
+--[[--------------------------------------------------------------------------
+--
+-- 	ColorObj:MulR( number )
+--	ColorObj:MulG( number )
+--	ColorObj:MulB( number )
+--	ColorObj:MulA( number )
+--
+--	Multiplies the given number to the Color object's corresponding RGBA value.
+--	 The result after the multiplication operation is clamped between 0 - 255 
+--	 and rounded to the nearest whole number.
+--
+--	Returns the Color object.
+--
+--		print( Color(2,2,2):MulR( 5 ) ) 	==>	(10,	2,	2,	255)
+--	
+--	Equivalent to:
+--
+--		local color1 = Color(2,2,2)
+--		print( color1:MulR( 5 ) ) 		==>	(10,	2,	2,	255)
+--]]--
+function meta:MulR( r )
+
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+
+	self.r = Round( Clamp( self.r * r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:MulG( g )
+	
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	
+	self.g = Round( Clamp( self.g * g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:MulB( b )
+
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	
+	self.b = Round( Clamp( self.b * b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:MulA( a )
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	
+	self.a = Round( Clamp( self.a * a ) )
+	return self
+	
+end
+
+--[[--------------------------------------------------------------------------
+-- Division Functions
+--------------------------------------------------------------------------]]--
+
+--[[--------------------------------------------------------------------------
+--
+-- 	ColorObj:DivR( number )
+--	ColorObj:DivG( number )
+--	ColorObj:DivB( number )
+--	ColorObj:DivA( number )
+--
+--	Divides the Color object's corresponding RGBA value by the given number.
+--	 The result after the division operation is clamped between 0 - 255 
+--	 and rounded to the nearest whole number.
+--
+--	Returns the Color object.
+--
+--		print( Color(10,10,10):DivR( 5 ) ) 	==>	(2,	10,	10,	255)
+--	
+--	Equivalent to:
+--
+--		local color1 = Color(10,10,10)
+--		print( color1:DivR( 5 ) ) 		==>	(2,	10,	10,	255)
+--]]--
+function meta:DivR( r )
+
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+
+	self.r = ( r == 0 and 0 ) or Round( Clamp( self.r / r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:DivG( g )
+	
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	
+	self.g = ( g == 0 and 0 ) or Round( Clamp( self.g / g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:DivB( b )
+
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	
+	self.b = ( b == 0 and 0 ) or Round( Clamp( self.b / b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function meta:DivA( a )
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	
+	self.a = ( a == 0 and 0 ) or Round( Clamp( self.a / a ) )
+	return self
+	
+end
+
+
+
+--[[--------------------------------------------------------------------------
+-- Arithmetic Functions
+--------------------------------------------------------------------------]]--
 
 --[[--------------------------------------------------------------------------
 --
@@ -463,9 +590,9 @@ function meta.__add( lhs, rhs )
 	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
 	return Color(
-		r1 + r2, 
-		g1 + g2, 
-		b1 + b2 
+		r1 + r2,
+		g1 + g2,
+		b1 + b2
 	)
 	
 end
@@ -502,7 +629,7 @@ function meta.__sub( lhs, rhs )
 	return Color( 
 		r1 - r2, 
 		g1 - g2, 
-		b1 - b2 
+		b1 - b2
 	)
 
 end
@@ -539,7 +666,7 @@ function meta.__mul( lhs, rhs )
 	return Color( 
 		r1 * r2, 
 		g1 * g2, 
-		b1 * b2 
+		b1 * b2
 	)
 
 end
@@ -576,10 +703,14 @@ function meta.__div( lhs, rhs )
 	return Color( 
 		r1 / r2, 
 		g1 / g2, 
-		b1 / b2 
+		b1 / b2
 	)
 
 end
+
+--[[--------------------------------------------------------------------------
+-- Relational Functions
+--------------------------------------------------------------------------]]--
 
 --[[--------------------------------------------------------------------------
 --
@@ -608,7 +739,8 @@ function meta.__eq( lhs, rhs )
 	return
 		lhs.r == rhs.r and
 		lhs.g == rhs.g and
-		lhs.b == rhs.b
+		lhs.b == rhs.b and
+		lhs.a == rhs.a
 end
 
 --[[--------------------------------------------------------------------------
@@ -617,57 +749,44 @@ end
 --
 --	Defines the behavior when seeing if one Color object is less than another Color object
 --
---	***This function is designed with the assumption that the Color object with 
---	 smaller values than the other Color object will be smaller overall.
+--	Both colors are converted from RGB to the HSV color space and then compared using the
+--	 V value (lightness).
 --
---	***This indirectly implies that if Color A's 'r' and 'g' fields are less than
---	 the Color B's 'r' and 'g', comparing A < B will return false if A's 'b' field
---	 is greater than B's 'b' field. See below for an example.
---
---	E.g.,
---		Color(0,0,0) < Color()		==> true,  because 0 < 255, 0 < 255, 0 < 255
---		Color(0,0,1) < Color(255,255,0)	==> false, because A's 'b' (1) is not less than B's 'b' (0)
---
---	As such, you should take caution when using these functions. 
+--	print( Color(254,254,254) < Color(255,255,255) )	==>	true, the LHS color's V (lightness) is lower than the RHS's
+--	print( Color(255,0,0) < Color(255,255,255) )		==>	false, both color's V (lightness) are equal
 --]]--
 function meta.__lt( lhs, rhs )
 
-	return
-		lhs.r < rhs.r and
-		lhs.g < rhs.g and
-		lhs.b < rhs.b
+	local _, _, lhsV = lhs:ToHSV()
+	local _, _, rhsV = rhs:ToHSV()
+	
+	return lhsV < rhsV
 	
 end
 
 --[[--------------------------------------------------------------------------
 --
--- 	Color1 <= Color2
+-- 	Color1 < Color2
 --
 --	Defines the behavior when seeing if one Color object is less than or equal to another Color object
 --
---	***This function is designed with the assumption that the Color object with 
---	 smaller values than the other Color object will be smaller overall.
+--	Both colors are converted from RGB to the HSV color space and then compared using the
+--	 V value (lightness).
 --
---	***This indirectly implies that if Color A's 'r' and 'g' fields are less than
---	 the Color B's 'r' and 'g', comparing A <= B will return false if A's 'b' field
---	 is greater than B's 'b' field. See below for an example.
---
---	E.g.,
---		Color(0,0,0) <= Color()			==> true,  because 0 <= 255, 0 <= 255, 0 <= 255
---		Color(0,0,1) <= Color(255,255,0)	==> false, because A's 'b' (1) is not less than or equal B's 'b' (0)
---
---	As such, you should take caution when using these functions. 
+--	print( Color(254,254,254) <= Color(255,255,255) )	==>	true, the LHS color's V (lightness) is lower/not equal to the RHS's
+--	print( Color(255,0,0) <= Color(255,255,255) )		==>	true, because both color's V values are equal
 --]]--
 function meta.__le( lhs, rhs )
 
-	return
-		lhs.r <= rhs.r and
-		lhs.g <= rhs.g and
-		lhs.b <= rhs.b
+	local _, _, lhsV = lhs:ToHSV()
+	local _, _, rhsV = rhs:ToHSV()
+	
+	return lhsV <= rhsV
 	
 end
-
-
+--[[--------------------------------------------------------------------------
+-- String Functions
+--------------------------------------------------------------------------]]--
 
 --[[--------------------------------------------------------------------------
 --
@@ -690,12 +809,13 @@ function meta.__tostring( lhs )
 	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
 end
-
-
+--[[--------------------------------------------------------------------------
+-- HSV <==> RGB Conversion Functions
+--------------------------------------------------------------------------]]--
 
 --[[--------------------------------------------------------------------------
 --
---	meta:ToHSV()
+--	ColorObj:ToHSV()
 --
 --	Returns the HSV color space and current Alpha of this Color object.
 --
