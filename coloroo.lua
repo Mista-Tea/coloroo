@@ -43,6 +43,9 @@
 		- April 15th, 2014:		
 			Added support for converting between RGB and HSV color spaces
 			Added  Set*, Add*, and Sub* convenience functions
+		- April 16th, 2014:
+			Added ColorObj:Copy()
+			Added ColorObj:Mul* and Div* convenience functions
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
