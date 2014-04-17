@@ -1,6 +1,6 @@
 --[[--------------------------------------------------------------------------
 	File name:
-		color.lua
+		coloroo.lua
 	
 	Author:
 		Mista-Tea ([IJWTB Thomas])
@@ -52,13 +52,9 @@
 -- Namespace Tables
 --------------------------------------------------------------------------]]--
 
--- defines our metatable we'll assign to the Color objects
 local meta = { r = 255, g = 255, b = 255, a = 255, h = 0, s = 0, v = 1 }
 meta.__index = meta
 
--- the list of acceptable types we can use to operate on the Color object.
--- this will return the rgba values if given a table,
--- or return a number repeated 4 times to represent rbga values if given a number
 local operations = {
 	table  = function( col ) return col.r, col.g, col.b, col.a end,
 	number = function( num ) return num,     num,   num,   num end,
@@ -306,9 +302,6 @@ function meta:DivA( a )
 	return self
 	
 end
-
-
-
 --[[--------------------------------------------------------------------------
 -- Arithmetic Functions
 --------------------------------------------------------------------------]]--
