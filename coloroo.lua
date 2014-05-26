@@ -1,6 +1,6 @@
 --[[--------------------------------------------------------------------------
 	File name:
-		color.lua
+		coloroo.lua
 	
 	Author:
 		Mista-Tea ([IJWTB Thomas])
@@ -132,7 +132,7 @@ meta.__index = meta
 -- or return a number repeated 4 times to represent rbga values if given a number
 local operations = {
 	table  = function( col ) return col.r, col.g, col.b, col.a end,
-	number = function( num ) return num,     num,   num,   num end,
+	number = function( num ) return   num,   num,   num,   num end,
 }
 
 --[[--------------------------------------------------------------------------
