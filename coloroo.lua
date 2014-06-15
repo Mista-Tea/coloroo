@@ -123,9 +123,7 @@
 -- Namespace Tables
 --------------------------------------------------------------------------]]--
 
--- defines our metatable we'll assign to the Color objects
-local meta = { r = 255, g = 255, b = 255, a = 255, h = 0, s = 0, v = 1 }
-meta.__index = meta
+local COLOR = FindMetaTable( "Color" )
 
 -- the list of acceptable types we can use to operate on the Color object.
 -- this will return the rgba values if given a table,
@@ -203,7 +201,7 @@ function Color( r, g, b, a )
 			b = ( b and Round( Clamp( b ) ) ) or 255,
 			a = ( a and Round( Clamp( a ) ) ) or 255 
 		}, 
-		meta 
+		COLOR 
 	)
 	
 end
@@ -227,7 +225,7 @@ end
 --		local color1 = Color()
 --		local color2 = color1:Copy():SubA( 255 ) -- CORRECT! color1 and color2 are independent objects
 --]]--
-function meta:Copy()
+function COLOR:Copy()
 
 	return Color( self.r, self.g, self.b, self.a )
 
@@ -257,7 +255,7 @@ end
 --	Sets this Color's 'a' value to the given number, rounded to the nearest whole number
 --	 and clamped between 0 and 255.
 --]]--
-function meta:SetAlpha( a )
+function COLOR:SetAlpha( a )
 	
 	return self:SetA( a )
 	
@@ -286,28 +284,28 @@ end
 --		local color1 = Color()
 --		print( color1:SetR( 0 ) ) 	==>	(0,	255,	255,	255)
 --]]--
-function meta:SetR( r )
+function COLOR:SetR( r )
 
 	self.r = Round( Clamp( r ) )
 	return self
 
 end
 --[[----------------------------------------------------------------------]]--
-function meta:SetG( g )
+function COLOR:SetG( g )
 	
 	self.g = Round( Clamp( g ) )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:SetB( b )
+function COLOR:SetB( b )
 
 	self.b = Round( Clamp( b ) )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:SetA( a )
+function COLOR:SetA( a )
 
 	self.a = Round( Clamp( a ) )
 	return self
@@ -338,7 +336,7 @@ end
 --		local color1 = Color(0,0,0)
 --		print( color1:AddR( 55 ) ) 		==>	(55,	0,	0,	0)
 --]]--
-function meta:AddR( r )
+function COLOR:AddR( r )
 	
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 	
@@ -347,7 +345,7 @@ function meta:AddR( r )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:AddG( g )
+function COLOR:AddG( g )
 
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
@@ -356,7 +354,7 @@ function meta:AddG( g )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:AddB( b )
+function COLOR:AddB( b )
 	
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
@@ -365,7 +363,7 @@ function meta:AddB( b )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:AddA( a )
+function COLOR:AddA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
@@ -398,7 +396,7 @@ end
 --		local color1 = Color()
 --		print( color1:SubR( 55 ) ) 	==>	(200,	255,	255,	255)
 --]]--
-function meta:SubR( r )
+function COLOR:SubR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
@@ -407,7 +405,7 @@ function meta:SubR( r )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:SubG( g )
+function COLOR:SubG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
@@ -416,7 +414,7 @@ function meta:SubG( g )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:SubB( b )
+function COLOR:SubB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
@@ -425,7 +423,7 @@ function meta:SubB( b )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:SubA( a )
+function COLOR:SubA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
@@ -458,7 +456,7 @@ end
 --		local color1 = Color(2,2,2)
 --		print( color1:MulR( 5 ) ) 		==>	(10,	2,	2,	255)
 --]]--
-function meta:MulR( r )
+function COLOR:MulR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
@@ -467,7 +465,7 @@ function meta:MulR( r )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:MulG( g )
+function COLOR:MulG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
@@ -476,7 +474,7 @@ function meta:MulG( g )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:MulB( b )
+function COLOR:MulB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
@@ -485,7 +483,7 @@ function meta:MulB( b )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:MulA( a )
+function COLOR:MulA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
@@ -518,7 +516,7 @@ end
 --		local color1 = Color(10,10,10)
 --		print( color1:DivR( 5 ) ) 		==>	(2,	10,	10,	255)
 --]]--
-function meta:DivR( r )
+function COLOR:DivR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
@@ -527,7 +525,7 @@ function meta:DivR( r )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:DivG( g )
+function COLOR:DivG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
@@ -536,7 +534,7 @@ function meta:DivG( g )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:DivB( b )
+function COLOR:DivB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
@@ -545,7 +543,7 @@ function meta:DivB( b )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta:DivA( a )
+function COLOR:DivA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
@@ -578,7 +576,7 @@ end
 --		5 + Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue
 --
 --]]--
-function meta.__add( lhs, rhs )
+function COLOR.__add( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -615,7 +613,7 @@ end
 --		2 - Color(5,5,5)		==> Color(0,0,0) -- IMPORTANT! This tries to subtract 5 from 2 (AKA -3), which will be clamped to 0!
 --
 --]]--
-function meta.__sub( lhs, rhs )
+function COLOR.__sub( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -652,7 +650,7 @@ end
 --		2 * Color(5,5,5)		==> Color(10,10,10) -- we can reverse the operand ordering without issue 
 --
 --]]--
-function meta.__mul( lhs, rhs )
+function COLOR.__mul( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -689,7 +687,7 @@ end
 --		5 / Color(10,10,10)		==> Color(1,1,1) -- IMPORTANT! This tries to divide 5 by 10 (AKA 0.5), which will be rounded up to 1!
 --
 --]]--
-function meta.__div( lhs, rhs )
+function COLOR.__div( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -734,7 +732,7 @@ end
 --
 --	Source: http://www.lua.org/pil/13.2.html
 --]]--
-function meta.__eq( lhs, rhs )
+function COLOR.__eq( lhs, rhs )
 	
 	return
 		lhs.r == rhs.r and
@@ -755,7 +753,7 @@ end
 --	print( Color(254,254,254) < Color(255,255,255) )	==>	true, the LHS color's V (lightness) is lower than the RHS's
 --	print( Color(255,0,0) < Color(255,255,255) )		==>	false, both color's V (lightness) are equal
 --]]--
-function meta.__lt( lhs, rhs )
+function COLOR.__lt( lhs, rhs )
 
 	local _, _, lhsV = lhs:ToHSV()
 	local _, _, rhsV = rhs:ToHSV()
@@ -776,7 +774,7 @@ end
 --	print( Color(254,254,254) <= Color(255,255,255) )	==>	true, the LHS color's V (lightness) is lower/not equal to the RHS's
 --	print( Color(255,0,0) <= Color(255,255,255) )		==>	true, because both color's V values are equal
 --]]--
-function meta.__le( lhs, rhs )
+function COLOR.__le( lhs, rhs )
 
 	local _, _, lhsV = lhs:ToHSV()
 	local _, _, rhsV = rhs:ToHSV()
@@ -804,7 +802,7 @@ end
 --	Garry's:	print( Color(255,255,255) ) ==> table: 0x123abc
 --	This:		print( Color(255,255,255) ) ==>	(255,	255,	255,	255)
 --]]--
-function meta.__tostring( lhs )
+function COLOR.__tostring( lhs )
 
 	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
@@ -829,7 +827,7 @@ end
 --	 http://www.cs.rit.edu/~ncs/color/t_convert.html
 --	 https://github.com/EmmanuelOga/columns/blob/master/utils/color.lua
 --]]--
-function meta:ToHSV()
+function COLOR:ToHSV()
 
 	r = self.r / 255 
 	g = self.g / 255 
