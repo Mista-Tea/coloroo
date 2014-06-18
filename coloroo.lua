@@ -42,18 +42,20 @@
 		- April 14th, 2014: 	Added to GitHub
 		- April 15th, 2014:		
 			Added support for converting between RGB and HSV color spaces
-			Added  Set*, Add*, and Sub* convenience functions
+			Added ColorObj:Set*, Add*, and Sub* convenience functions
 		- April 16th, 2014:
 			Added ColorObj:Copy()
 			Added ColorObj:Mul* and Div* convenience functions
+		- June, 2014:
+			Color metatable officially supported by Garry's Mod (thanks _Kilburn!)
+			Changed ColorOO to use the Color metatable
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
 -- Namespace Tables
 --------------------------------------------------------------------------]]--
 
-local meta = { r = 255, g = 255, b = 255, a = 255, h = 0, s = 0, v = 1 }
-meta.__index = meta
+local COLOR = FindMetaTable( "Color" )
 
 local operations = {
 	table  = function( col ) return col.r, col.g, col.b, col.a end,
@@ -96,14 +98,14 @@ function Color( r, g, b, a )
 			b = ( b and Round( Clamp( b ) ) ) or 255,
 			a = ( a and Round( Clamp( a ) ) ) or 255 
 		}, 
-		meta 
+		COLOR 
 	)
 	
 end
 --[[--------------------------------------------------------------------------
 -- Convenience Functions
 --------------------------------------------------------------------------]]--
-function meta:Copy()
+function COLOR:Copy()
 
 	return Color( self.r, self.g, self.b, self.a )
 
@@ -114,198 +116,10 @@ function ColorAlpha( color, a )
 	return color:SetA( a )
 	
 end
---[[----------------------------------------------------------------------]]--
-function meta:SetAlpha( a )
-	
-	return self:SetA( a )
-	
-end
---[[--------------------------------------------------------------------------
--- Setting Functions
---------------------------------------------------------------------------]]--
-function meta:SetR( r )
-
-	self.r = Round( Clamp( r ) )
-	return self
-
-end
---[[----------------------------------------------------------------------]]--
-function meta:SetG( g )
-	
-	self.g = Round( Clamp( g ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:SetB( b )
-
-	self.b = Round( Clamp( b ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:SetA( a )
-
-	self.a = Round( Clamp( a ) )
-	return self
-
-end
---[[--------------------------------------------------------------------------
--- Addition Functions
---------------------------------------------------------------------------]]--
-function meta:AddR( r )
-	
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
-	
-	self.r = Round( Clamp( self.r + r ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:AddG( g )
-
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
-	
-	self.g = Round( Clamp( self.g + g ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:AddB( b )
-	
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
-	
-	self.b = Round( Clamp( self.b + b ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:AddA( a )
-	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
-	
-	self.a = Round( Clamp( self.a + a ) )
-	return self
-	
-end
---[[--------------------------------------------------------------------------
--- Subtraction Functions
---------------------------------------------------------------------------]]--
-function meta:SubR( r )
-
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
-
-	self.r = Round( Clamp( self.r - r ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:SubG( g )
-	
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
-	
-	self.g = Round( Clamp( self.g - g ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:SubB( b )
-
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
-	
-	self.b = Round( Clamp( self.b - b ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:SubA( a )
-	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
-	
-	self.a = Round( Clamp( self.a - a ) )
-	return self
-	
-end
---[[--------------------------------------------------------------------------
--- Multiplication Functions
---------------------------------------------------------------------------]]--
-function meta:MulR( r )
-
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
-
-	self.r = Round( Clamp( self.r * r ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:MulG( g )
-	
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
-	
-	self.g = Round( Clamp( self.g * g ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:MulB( b )
-
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
-	
-	self.b = Round( Clamp( self.b * b ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:MulA( a )
-	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
-	
-	self.a = Round( Clamp( self.a * a ) )
-	return self
-	
-end
---[[--------------------------------------------------------------------------
--- Division Functions
---------------------------------------------------------------------------]]--
-function meta:DivR( r )
-
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
-
-	self.r = ( r == 0 and 0 ) or Round( Clamp( self.r / r ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:DivG( g )
-	
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
-	
-	self.g = ( g == 0 and 0 ) or Round( Clamp( self.g / g ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:DivB( b )
-
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
-	
-	self.b = ( b == 0 and 0 ) or Round( Clamp( self.b / b ) )
-	return self
-	
-end
---[[----------------------------------------------------------------------]]--
-function meta:DivA( a )
-	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
-	
-	self.a = ( a == 0 and 0 ) or Round( Clamp( self.a / a ) )
-	return self
-	
-end
 --[[--------------------------------------------------------------------------
 -- Arithmetic Functions
 --------------------------------------------------------------------------]]--
-function meta.__add( lhs, rhs )
+function COLOR.__add( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -324,7 +138,7 @@ function meta.__add( lhs, rhs )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__sub( lhs, rhs )
+function COLOR.__sub( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -343,7 +157,7 @@ function meta.__sub( lhs, rhs )
 
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__mul( lhs, rhs )
+function COLOR.__mul( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -362,7 +176,7 @@ function meta.__mul( lhs, rhs )
 
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__div( lhs, rhs )
+function COLOR.__div( lhs, rhs )
 	
 	local lhsType = type( lhs )
 	local rhsType = type( rhs )
@@ -383,7 +197,7 @@ end
 --[[--------------------------------------------------------------------------
 -- Relational Functions
 --------------------------------------------------------------------------]]--
-function meta.__eq( lhs, rhs )
+function COLOR.__eq( lhs, rhs )
 	
 	return
 		lhs.r == rhs.r and
@@ -392,7 +206,7 @@ function meta.__eq( lhs, rhs )
 		lhs.a == rhs.a
 end
 --[[----------------------------------------------------------------------]]--
-function meta.__lt( lhs, rhs )
+function COLOR.__lt( lhs, rhs )
 
 	local _, _, lhsV = lhs:ToHSV()
 	local _, _, rhsV = rhs:ToHSV()
@@ -401,7 +215,7 @@ function meta.__lt( lhs, rhs )
 	
 end
 
-function meta.__le( lhs, rhs )
+function COLOR.__le( lhs, rhs )
 
 	local _, _, lhsV = lhs:ToHSV()
 	local _, _, rhsV = rhs:ToHSV()
@@ -412,7 +226,7 @@ end
 --[[--------------------------------------------------------------------------
 -- String Functions
 --------------------------------------------------------------------------]]--
-function meta.__tostring( lhs )
+function COLOR.__tostring( lhs )
 
 	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
@@ -420,15 +234,15 @@ end
 --[[--------------------------------------------------------------------------
 -- HSV <==> RGB Conversion Functions
 --------------------------------------------------------------------------]]--
-function meta:ToHSV()
+function ColorToHSV( c )
 
-	r = self.r / 255 
-	g = self.g / 255 
-	b = self.b / 255 
-	a = self.a
+	local r = c.r / 255 
+	local g = c.g / 255 
+	local b = c.b / 255 
+	local a = c.a
 	
-	local max = math.max(r, g, b)
-	local min = math.min(r, g, b)
+	local max = math.max( r, g, b )
+	local min = math.min( r, g, b )
 	
 	local h, s, v = 0, 0, max
 
@@ -492,9 +306,9 @@ function HSVToColor( h, s, v, a )
 	
 end
 --[[----------------------------------------------------------------------]]--
-function ColorToHSV( color )
+function COLOR:ToHSV()
 
-	return color:ToHSV()
+	return ColorToHSV( self )
 	
 end
 --[[----------------------------------------------------------------------]]--
@@ -510,5 +324,193 @@ end
 function RGBToHSV( r, g, b, a )
 
 	return Color( r, g, b, a ):ToHSV()
+	
+end
+--[[--------------------------------------------------------------------------
+-- Setting Functions
+--------------------------------------------------------------------------]]--
+function COLOR:SetAlpha( a )
+	
+	return self:SetA( a )
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:SetR( r )
+
+	self.r = Round( Clamp( r ) )
+	return self
+
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:SetG( g )
+	
+	self.g = Round( Clamp( g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:SetB( b )
+
+	self.b = Round( Clamp( b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:SetA( a )
+
+	self.a = Round( Clamp( a ) )
+	return self
+
+end
+--[[--------------------------------------------------------------------------
+-- Addition Functions
+--------------------------------------------------------------------------]]--
+function COLOR:AddR( r )
+	
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+	
+	self.r = Round( Clamp( self.r + r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:AddG( g )
+
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	
+	self.g = Round( Clamp( self.g + g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:AddB( b )
+	
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	
+	self.b = Round( Clamp( self.b + b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:AddA( a )
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	
+	self.a = Round( Clamp( self.a + a ) )
+	return self
+	
+end
+--[[--------------------------------------------------------------------------
+-- Subtraction Functions
+--------------------------------------------------------------------------]]--
+function COLOR:SubR( r )
+
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+
+	self.r = Round( Clamp( self.r - r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:SubG( g )
+	
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	
+	self.g = Round( Clamp( self.g - g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:SubB( b )
+
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	
+	self.b = Round( Clamp( self.b - b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:SubA( a )
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	
+	self.a = Round( Clamp( self.a - a ) )
+	return self
+	
+end
+--[[--------------------------------------------------------------------------
+-- Multiplication Functions
+--------------------------------------------------------------------------]]--
+function COLOR:MulR( r )
+
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+
+	self.r = Round( Clamp( self.r * r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:MulG( g )
+	
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	
+	self.g = Round( Clamp( self.g * g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:MulB( b )
+
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	
+	self.b = Round( Clamp( self.b * b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:MulA( a )
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	
+	self.a = Round( Clamp( self.a * a ) )
+	return self
+	
+end
+--[[--------------------------------------------------------------------------
+-- Division Functions
+--------------------------------------------------------------------------]]--
+function COLOR:DivR( r )
+
+	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+
+	self.r = ( r == 0 and 0 ) or Round( Clamp( self.r / r ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:DivG( g )
+	
+	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	
+	self.g = ( g == 0 and 0 ) or Round( Clamp( self.g / g ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:DivB( b )
+
+	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	
+	self.b = ( b == 0 and 0 ) or Round( Clamp( self.b / b ) )
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
+function COLOR:DivA( a )
+	
+	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	
+	self.a = ( a == 0 and 0 ) or Round( Clamp( self.a / a ) )
+	return self
 	
 end
