@@ -197,6 +197,11 @@ end
 --]]--
 function Color( r, g, b, a )
 	
+	r = tonumber( r )
+	g = tonumber( g )
+	b = tonumber( b )
+	a = tonumber( a )
+	
 	return setmetatable( 
 		{ 
 			r = ( r and Round( Clamp( r ) ) ) or 255,
