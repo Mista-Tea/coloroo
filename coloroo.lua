@@ -120,6 +120,8 @@
 		- June, 2014:
 			Color metatable officially supported by Garry's Mod (thanks _Kilburn!)
 			Changed ColorOO to use the Color metatable
+		- January 10th, 2014:
+			Removed ColorAlpha, incompatible and no longer needed 
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
@@ -237,21 +239,6 @@ function COLOR:Copy()
 
 	return Color( self.r, self.g, self.b, self.a )
 
-end
-
---[[--------------------------------------------------------------------------
---
--- 	ColorAlpha( color, number )
---
---	A replacement for Garry's ColorAlpha function. 
---
---	This now acts as a wrapper function for ColorObj:SetA(), which directly 
---	 modifies the Color object's alpha value.
---]]--
-function ColorAlpha( color, a )
-
-	return color:SetA( a )
-	
 end
 
 --[[--------------------------------------------------------------------------
