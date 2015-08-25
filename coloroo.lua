@@ -124,8 +124,7 @@ function COLOR.__add( lhs, rhs )
 	return Color(
 		r1 + r2,
 		g1 + g2,
-		b1 + b2,
-		a1 + a2
+		b1 + b2
 	)
 	
 end
@@ -144,8 +143,7 @@ function COLOR.__sub( lhs, rhs )
 	return Color( 
 		r1 - r2, 
 		g1 - g2, 
-		b1 - b2,
-		a1 - a2
+		b1 - b2
 	)
 
 end
@@ -164,8 +162,7 @@ function COLOR.__mul( lhs, rhs )
 	return Color( 
 		r1 * r2, 
 		g1 * g2, 
-		b1 * b2,
-		a1 * a2
+		b1 * b2
 	)
 
 end
@@ -184,8 +181,7 @@ function COLOR.__div( lhs, rhs )
 	return Color( 
 		( r1 == 0 or r2 == 0 and 0 ) or r1 / r2, 
 		( g1 == 0 or g2 == 0 and 0 ) or g1 / g2, 
-		( b1 == 0 or b2 == 0 and 0 ) or b1 / b2,
-		( a1 == 0 or a2 == 0 and 0 ) or a1 / a2
+		( b1 == 0 or b2 == 0 and 0 ) or b1 / b2
 	)
 
 end
