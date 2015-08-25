@@ -51,6 +51,10 @@
 			Changed ColorOO to use the Color metatable
 		- January 10th, 2015:
 			Removed ColorAlpha, incompatible and no longer needed
+		- August 25th, 2015:
+			Removed Round()'ing due to being incompatible with PAC3
+			Removed alpha value from arithmetic operations
+			Added ColorObj:Set()/Add()/Sub()/Mul()/Div()
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
@@ -320,6 +324,16 @@ end
 --[[--------------------------------------------------------------------------
 -- Setting Functions
 --------------------------------------------------------------------------]]--
+function COLOR:Set( r, g, b, a )
+
+	if ( r ) then self:SetR( r ) end
+	if ( g ) then self:SetG( g ) end
+	if ( b ) then self:SetB( b ) end
+	if ( a ) then self:SetA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:SetAlpha( a )
 	
 	return self:SetA( a )
@@ -356,6 +370,16 @@ end
 --[[--------------------------------------------------------------------------
 -- Addition Functions
 --------------------------------------------------------------------------]]--
+function COLOR:Add( r, g, b, a )
+
+	if ( r ) then self:AddR( r ) end
+	if ( g ) then self:AddG( g ) end
+	if ( b ) then self:AddB( b ) end
+	if ( a ) then self:AddA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:AddR( r )
 	
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
@@ -394,6 +418,16 @@ end
 --[[--------------------------------------------------------------------------
 -- Subtraction Functions
 --------------------------------------------------------------------------]]--
+function COLOR:Sub( r, g, b, a )
+
+	if ( r ) then self:SubR( r ) end
+	if ( g ) then self:SubG( g ) end
+	if ( b ) then self:SubB( b ) end
+	if ( a ) then self:SubA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:SubR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
@@ -432,6 +466,16 @@ end
 --[[--------------------------------------------------------------------------
 -- Multiplication Functions
 --------------------------------------------------------------------------]]--
+function COLOR:Mul( r, g, b, a )
+
+	if ( r ) then self:MulR( r ) end
+	if ( g ) then self:MulG( g ) end
+	if ( b ) then self:MulB( b ) end
+	if ( a ) then self:MulA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:MulR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
@@ -470,6 +514,16 @@ end
 --[[--------------------------------------------------------------------------
 -- Division Functions
 --------------------------------------------------------------------------]]--
+function COLOR:Div( r, g, b, a )
+
+	if ( r ) then self:DivR( r ) end
+	if ( g ) then self:DivG( g ) end
+	if ( b ) then self:DivB( b ) end
+	if ( a ) then self:DivA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:DivR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
