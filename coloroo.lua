@@ -121,7 +121,11 @@
 			Color metatable officially supported by Garry's Mod (thanks _Kilburn!)
 			Changed ColorOO to use the Color metatable
 		- January 10th, 2014:
-			Removed ColorAlpha, incompatible and no longer needed 
+			Removed ColorAlpha, incompatible and no longer needed
+		- August 25th, 2015:
+			Removed Round()'ing due to being incompatible with PAC3
+			Removed alpha value from arithmetic operations
+			Added ColorObj:Set()/Add()/Sub()/Mul()/Div()
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
@@ -664,6 +668,7 @@ end
 
 --[[--------------------------------------------------------------------------
 --
+--  ColorObj:Set( number, number, number, number )
 -- 	ColorObj:SetR( number )
 --	ColorObj:SetG( number )
 --	ColorObj:SetB( number )
@@ -681,6 +686,16 @@ end
 --		local color1 = Color()
 --		print( color1:SetR( 0 ) ) 	==>	(0,	255,	255,	255)
 --]]--
+function COLOR:Set( r, g, b, a )
+
+	if ( r ) then self:SetR( r ) end
+	if ( g ) then self:SetG( g ) end
+	if ( b ) then self:SetB( b ) end
+	if ( a ) then self:SetA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:SetR( r )
 
 	self.r = Clamp( r )
@@ -715,6 +730,7 @@ end
 
 --[[--------------------------------------------------------------------------
 --
+--  ColorObj:Add( number, number, number, number )
 -- 	ColorObj:AddR( number )
 --	ColorObj:AddG( number )
 --	ColorObj:AddB( number )
@@ -732,6 +748,16 @@ end
 --		local color1 = Color(0,0,0)
 --		print( color1:AddR( 55 ) ) 		==>	(55,	0,	0,	0)
 --]]--
+function COLOR:Add( r, g, b, a )
+
+	if ( r ) then self:AddR( r ) end
+	if ( g ) then self:AddG( g ) end
+	if ( b ) then self:AddB( b ) end
+	if ( a ) then self:AddA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:AddR( r )
 	
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
@@ -774,6 +800,7 @@ end
 
 --[[--------------------------------------------------------------------------
 --
+--  ColorObj:Sub( number, number, number, number )
 -- 	ColorObj:SubR( number )
 --	ColorObj:SubG( number )
 --	ColorObj:SubB( number )
@@ -791,6 +818,16 @@ end
 --		local color1 = Color()
 --		print( color1:SubR( 55 ) ) 	==>	(200,	255,	255,	255)
 --]]--
+function COLOR:Sub( r, g, b, a )
+
+	if ( r ) then self:SubR( r ) end
+	if ( g ) then self:SubG( g ) end
+	if ( b ) then self:SubB( b ) end
+	if ( a ) then self:SubA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:SubR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
@@ -833,7 +870,8 @@ end
 
 --[[--------------------------------------------------------------------------
 --
--- 	ColorObj:MulR( number )
+-- 	ColorObj:Mul( number, number, number, number )
+--  ColorObj:MulR( number )
 --	ColorObj:MulG( number )
 --	ColorObj:MulB( number )
 --	ColorObj:MulA( number )
@@ -850,6 +888,16 @@ end
 --		local color1 = Color(2,2,2)
 --		print( color1:MulR( 5 ) ) 		==>	(10,	2,	2,	255)
 --]]--
+function COLOR:Mul( r, g, b, a )
+
+	if ( r ) then self:MulR( r ) end
+	if ( g ) then self:MulG( g ) end
+	if ( b ) then self:MulB( b ) end
+	if ( a ) then self:MulA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:MulR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
@@ -892,7 +940,8 @@ end
 
 --[[--------------------------------------------------------------------------
 --
--- 	ColorObj:DivR( number )
+-- 	ColorObj:Div( number, number, number, number )
+--  ColorObj:DivR( number )
 --	ColorObj:DivG( number )
 --	ColorObj:DivB( number )
 --	ColorObj:DivA( number )
@@ -909,6 +958,16 @@ end
 --		local color1 = Color(10,10,10)
 --		print( color1:DivR( 5 ) ) 		==>	(2,	10,	10,	255)
 --]]--
+function COLOR:Div( r, g, b, a )
+
+	if ( r ) then self:DivR( r ) end
+	if ( g ) then self:DivG( g ) end
+	if ( b ) then self:DivB( b ) end
+	if ( a ) then self:DivA( a ) end
+	return self
+	
+end
+--[[----------------------------------------------------------------------]]--
 function COLOR:DivR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
