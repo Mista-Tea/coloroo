@@ -55,6 +55,7 @@
 			Removed Round()'ing due to being incompatible with PAC3
 			Removed alpha value from arithmetic operations
 			Added ColorObj:Set()/Add()/Sub()/Mul()/Div()
+			Removed asserts in ColorObj:Set()/Add*()/Sub*()/Mul*()/Div*()
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
@@ -382,7 +383,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:AddR( r )
 	
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
 	
 	self.r = Clamp( self.r + r )
 	return self
@@ -391,7 +392,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:AddG( g )
 
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
 	self.g = Clamp( self.g + g )
 	return self
@@ -400,7 +401,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:AddB( b )
 	
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
 	self.b = Clamp( self.b + b )
 	return self
@@ -409,7 +410,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:AddA( a )
 	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
 	self.a = Clamp( self.a + a )
 	return self
@@ -430,7 +431,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SubR( r )
 
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
 	self.r = Clamp( self.r - r )
 	return self
@@ -439,7 +440,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SubG( g )
 	
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
 	self.g = Clamp( self.g - g )
 	return self
@@ -448,7 +449,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SubB( b )
 
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
 	self.b = Clamp( self.b - b )
 	return self
@@ -457,7 +458,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SubA( a )
 	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
 	self.a = Clamp( self.a - a )
 	return self
@@ -478,7 +479,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:MulR( r )
 
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
 	self.r = Clamp( self.r * r )
 	return self
@@ -487,7 +488,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:MulG( g )
 	
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
 	self.g = Clamp( self.g * g )
 	return self
@@ -496,7 +497,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:MulB( b )
 
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
 	self.b = Clamp( self.b * b )
 	return self
@@ -505,7 +506,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:MulA( a )
 	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
 	self.a = Clamp( self.a * a )
 	return self
@@ -526,7 +527,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:DivR( r )
 
-	assert( math.abs( r ) == r, "Parameter should be a positive number" )
+	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
 	self.r = ( r == 0 and 0 ) or Clamp( self.r / r )
 	return self
@@ -535,7 +536,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:DivG( g )
 	
-	assert( math.abs( g ) == g, "Parameter should be a positive number" )
+	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
 	self.g = ( g == 0 and 0 ) or Clamp( self.g / g )
 	return self
@@ -544,7 +545,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:DivB( b )
 
-	assert( math.abs( b ) == b, "Parameter should be a positive number" )
+	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
 	self.b = ( b == 0 and 0 ) or Clamp( self.b / b )
 	return self
@@ -553,7 +554,7 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:DivA( a )
 	
-	assert( math.abs( a ) == a, "Parameter should be a positive number" )
+	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
 	self.a = ( a == 0 and 0 ) or Clamp( self.a / a )
 	return self
