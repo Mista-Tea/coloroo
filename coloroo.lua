@@ -55,7 +55,7 @@
 			print( lhs + rhs ) 	==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
 			print( lhs - rhs ) 	==> (200,	200, 	200, 	255)
 			print( lhs * rhs ) 	==> (255,	255, 	255, 	255) because the values are clamped between 0 and 255
-			print( lhs / rhs ) 	==> (5, 	5, 	5,	255) because the values are rounded to the nearest whole number
+			print( lhs / rhs ) 	==> (4.6363,4.6363,	4.6363,	255) because the values are left as decimal values now
 			
 			print( lhs == rhs ) 	==> false  because lhs's r/g/b values are not all equal to rhs's
 			
@@ -155,21 +155,6 @@ local type         = type
 
 --[[--------------------------------------------------------------------------
 --
---	Round( number )
---
---	A localized replacement for Garry's math.Round function. This eliminates the
---	 decimal place parameter to reduce a few unneeded operations since we're
---	 going to be rounding to the nearest whole number.
---
---]]--
-local function Round( num )
-
-	return math.floor( num + 0.5 )
-  
-end
-
---[[--------------------------------------------------------------------------
---
 --	Clamp( number )
 --
 --	A localized replacement for Garry's math.Clamp function. This eliminates the
@@ -206,10 +191,10 @@ function Color( r, g, b, a )
 	
 	return setmetatable( 
 		{ 
-			r = ( r and Round( Clamp( r ) ) ) or 255,
-			g = ( g and Round( Clamp( g ) ) ) or 255,
-			b = ( b and Round( Clamp( b ) ) ) or 255,
-			a = ( a and Round( Clamp( a ) ) ) or 255 
+			r = ( r and Clamp( r ) ) or 255,
+			g = ( g and Clamp( g ) ) or 255,
+			b = ( b and Clamp( b ) ) or 255,
+			a = ( a and Clamp( a ) ) or 255 
 		}, 
 		COLOR 
 	)
@@ -371,7 +356,6 @@ end
 --	E.g.,
 --		Color(10,10,10) / Color(5,5,5)	==> Color(2,2,2) -- dividing 10 by 5 produces 2
 --		Color(10,10,10) / 5		==> Color(2,2,2) -- dividing 10 by 5 produces 2
---		5 / Color(10,10,10)		==> Color(1,1,1) -- IMPORTANT! This tries to divide 5 by 10 (AKA 0.5), which will be rounded up to 1!
 --
 --]]--
 function COLOR.__div( lhs, rhs )
@@ -670,8 +654,7 @@ end
 --
 --	Wrapper function for Color():SetA()
 --
---	Sets this Color's 'a' value to the given number, rounded to the nearest whole number
---	 and clamped between 0 and 255.
+--	Sets this Color's 'a' value to the given number, clamped between 0 and 255.
 --]]--
 function COLOR:SetAlpha( a )
 	
@@ -687,7 +670,7 @@ end
 --	ColorObj:SetA( number )
 --
 --	Sets the Color object's corresponding RGBA value to the given number,
---	 clamped between 0 - 255 and rounded to the nearest whole number.
+--	 clamped between 0 - 255.
 --
 --	Returns the Color object.
 --
@@ -700,28 +683,28 @@ end
 --]]--
 function COLOR:SetR( r )
 
-	self.r = Round( Clamp( r ) )
+	self.r = Clamp( r )
 	return self
 
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetG( g )
 	
-	self.g = Round( Clamp( g ) )
+	self.g = Clamp( g )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetB( b )
 
-	self.b = Round( Clamp( b ) )
+	self.b = Clamp( b )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetA( a )
 
-	self.a = Round( Clamp( a ) )
+	self.a = Clamp( a )
 	return self
 
 end
@@ -738,8 +721,7 @@ end
 --	ColorObj:AddA( number )
 --
 --	Adds the given number to the Color object's corresponding RGBA value.
---	 The result after the addition operation is clamped between 0 - 255 
---	 and rounded to the nearest whole number.
+--	 The result after the addition operation is clamped between 0 - 255.
 --
 --	Returns the Color object.
 --
@@ -754,7 +736,7 @@ function COLOR:AddR( r )
 	
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 	
-	self.r = Round( Clamp( self.r + r ) )
+	self.r = Clamp( self.r + r )
 	return self
 	
 end
@@ -763,7 +745,7 @@ function COLOR:AddG( g )
 
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Round( Clamp( self.g + g ) )
+	self.g = Clamp( self.g + g )
 	return self
 	
 end
@@ -772,7 +754,7 @@ function COLOR:AddB( b )
 	
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Round( Clamp( self.b + b ) )
+	self.b = Clamp( self.b + b )
 	return self
 	
 end
@@ -781,7 +763,7 @@ function COLOR:AddA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Round( Clamp( self.a + a ) )
+	self.a = Clamp( self.a + a )
 	return self
 	
 end
@@ -798,8 +780,7 @@ end
 --	ColorObj:SubA( number )
 --
 --	Subtracts the given number from the Color object's corresponding RGBA value.
---	 The result after the subtraction operation is clamped between 0 - 255 
---	 and rounded to the nearest whole number.
+--	 The result after the subtraction operation is clamped between 0 - 255.
 --
 --	Returns the Color object.
 --
@@ -814,7 +795,7 @@ function COLOR:SubR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = Round( Clamp( self.r - r ) )
+	self.r = Clamp( self.r - r )
 	return self
 	
 end
@@ -823,7 +804,7 @@ function COLOR:SubG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Round( Clamp( self.g - g ) )
+	self.g = Clamp( self.g - g )
 	return self
 	
 end
@@ -832,7 +813,7 @@ function COLOR:SubB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Round( Clamp( self.b - b ) )
+	self.b = Clamp( self.b - b )
 	return self
 	
 end
@@ -841,7 +822,7 @@ function COLOR:SubA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Round( Clamp( self.a - a ) )
+	self.a = Clamp( self.a - a )
 	return self
 	
 end
@@ -858,8 +839,7 @@ end
 --	ColorObj:MulA( number )
 --
 --	Multiplies the given number to the Color object's corresponding RGBA value.
---	 The result after the multiplication operation is clamped between 0 - 255 
---	 and rounded to the nearest whole number.
+--	 The result after the multiplication operation is clamped between 0 - 255.
 --
 --	Returns the Color object.
 --
@@ -874,7 +854,7 @@ function COLOR:MulR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = Round( Clamp( self.r * r ) )
+	self.r = Clamp( self.r * r )
 	return self
 	
 end
@@ -883,7 +863,7 @@ function COLOR:MulG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Round( Clamp( self.g * g ) )
+	self.g = Clamp( self.g * g )
 	return self
 	
 end
@@ -892,7 +872,7 @@ function COLOR:MulB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Round( Clamp( self.b * b ) )
+	self.b = Clamp( self.b * b )
 	return self
 	
 end
@@ -901,7 +881,7 @@ function COLOR:MulA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Round( Clamp( self.a * a ) )
+	self.a = Clamp( self.a * a )
 	return self
 	
 end
@@ -918,8 +898,7 @@ end
 --	ColorObj:DivA( number )
 --
 --	Divides the Color object's corresponding RGBA value by the given number.
---	 The result after the division operation is clamped between 0 - 255 
---	 and rounded to the nearest whole number.
+--	 The result after the division operation is clamped between 0 - 255.
 --
 --	Returns the Color object.
 --
@@ -934,7 +913,7 @@ function COLOR:DivR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = ( r == 0 and 0 ) or Round( Clamp( self.r / r ) )
+	self.r = ( r == 0 and 0 ) or Clamp( self.r / r )
 	return self
 	
 end
@@ -943,7 +922,7 @@ function COLOR:DivG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = ( g == 0 and 0 ) or Round( Clamp( self.g / g ) )
+	self.g = ( g == 0 and 0 ) or Clamp( self.g / g )
 	return self
 	
 end
@@ -952,7 +931,7 @@ function COLOR:DivB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = ( b == 0 and 0 ) or Round( Clamp( self.b / b ) )
+	self.b = ( b == 0 and 0 ) or Clamp( self.b / b )
 	return self
 	
 end
@@ -961,7 +940,7 @@ function COLOR:DivA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = ( a == 0 and 0 ) or Round( Clamp( self.a / a ) )
+	self.a = ( a == 0 and 0 ) or Clamp( self.a / a )
 	return self
 	
 end
