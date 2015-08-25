@@ -79,11 +79,6 @@ local type         = type
 -- Namespace Functions
 --------------------------------------------------------------------------]]--
 
-local function Round( num )
-
-	return math.floor( num + 0.5 )
-  
-end
 --[[----------------------------------------------------------------------]]--
 local function Clamp( num )
 
@@ -93,17 +88,12 @@ end
 --[[----------------------------------------------------------------------]]--
 function Color( r, g, b, a )
 	
-	r = tonumber( r )
-	g = tonumber( g )
-	b = tonumber( b )
-	a = tonumber( a )
-	
 	return setmetatable( 
 		{ 
-			r = ( r and Round( Clamp( r ) ) ) or 255,
-			g = ( g and Round( Clamp( g ) ) ) or 255,
-			b = ( b and Round( Clamp( b ) ) ) or 255,
-			a = ( a and Round( Clamp( a ) ) ) or 255 
+			r = ( r and Clamp( r ) ) or 255,
+			g = ( g and Clamp( g ) ) or 255,
+			b = ( b and Clamp( b ) ) or 255,
+			a = ( a and Clamp( a ) ) or 255 
 		}, 
 		COLOR 
 	)
@@ -134,7 +124,8 @@ function COLOR.__add( lhs, rhs )
 	return Color(
 		r1 + r2,
 		g1 + g2,
-		b1 + b2
+		b1 + b2,
+		a1 + a2
 	)
 	
 end
@@ -153,7 +144,8 @@ function COLOR.__sub( lhs, rhs )
 	return Color( 
 		r1 - r2, 
 		g1 - g2, 
-		b1 - b2
+		b1 - b2,
+		a1 - a2
 	)
 
 end
@@ -172,7 +164,8 @@ function COLOR.__mul( lhs, rhs )
 	return Color( 
 		r1 * r2, 
 		g1 * g2, 
-		b1 * b2
+		b1 * b2,
+		a1 * a2
 	)
 
 end
@@ -189,9 +182,10 @@ function COLOR.__div( lhs, rhs )
 	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
 	return Color( 
-		r1 / r2, 
-		g1 / g2, 
-		b1 / b2
+		( r1 == 0 or r2 == 0 and 0 ) or r1 / r2, 
+		( g1 == 0 or g2 == 0 and 0 ) or g1 / g2, 
+		( b1 == 0 or b2 == 0 and 0 ) or b1 / b2,
+		( a1 == 0 or a2 == 0 and 0 ) or a1 / a2
 	)
 
 end
@@ -338,28 +332,28 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetR( r )
 
-	self.r = Round( Clamp( r ) )
+	self.r = Clamp( r )
 	return self
 
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetG( g )
 	
-	self.g = Round( Clamp( g ) )
+	self.g = Clamp( g )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetB( b )
 
-	self.b = Round( Clamp( b ) )
+	self.b = Clamp( b )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetA( a )
 
-	self.a = Round( Clamp( a ) )
+	self.a = Clamp( a )
 	return self
 
 end
@@ -370,7 +364,7 @@ function COLOR:AddR( r )
 	
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 	
-	self.r = Round( Clamp( self.r + r ) )
+	self.r = Clamp( self.r + r )
 	return self
 	
 end
@@ -379,7 +373,7 @@ function COLOR:AddG( g )
 
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Round( Clamp( self.g + g ) )
+	self.g = Clamp( self.g + g )
 	return self
 	
 end
@@ -388,7 +382,7 @@ function COLOR:AddB( b )
 	
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Round( Clamp( self.b + b ) )
+	self.b = Clamp( self.b + b )
 	return self
 	
 end
@@ -397,7 +391,7 @@ function COLOR:AddA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Round( Clamp( self.a + a ) )
+	self.a = Clamp( self.a + a )
 	return self
 	
 end
@@ -408,7 +402,7 @@ function COLOR:SubR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = Round( Clamp( self.r - r ) )
+	self.r = Clamp( self.r - r )
 	return self
 	
 end
@@ -417,7 +411,7 @@ function COLOR:SubG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Round( Clamp( self.g - g ) )
+	self.g = Clamp( self.g - g )
 	return self
 	
 end
@@ -426,7 +420,7 @@ function COLOR:SubB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Round( Clamp( self.b - b ) )
+	self.b = Clamp( self.b - b )
 	return self
 	
 end
@@ -435,7 +429,7 @@ function COLOR:SubA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Round( Clamp( self.a - a ) )
+	self.a = Clamp( self.a - a )
 	return self
 	
 end
@@ -446,7 +440,7 @@ function COLOR:MulR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = Round( Clamp( self.r * r ) )
+	self.r = Clamp( self.r * r )
 	return self
 	
 end
@@ -455,7 +449,7 @@ function COLOR:MulG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Round( Clamp( self.g * g ) )
+	self.g = Clamp( self.g * g )
 	return self
 	
 end
@@ -464,7 +458,7 @@ function COLOR:MulB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Round( Clamp( self.b * b ) )
+	self.b = Clamp( self.b * b )
 	return self
 	
 end
@@ -473,7 +467,7 @@ function COLOR:MulA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Round( Clamp( self.a * a ) )
+	self.a = Clamp( self.a * a )
 	return self
 	
 end
@@ -484,7 +478,7 @@ function COLOR:DivR( r )
 
 	assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = ( r == 0 and 0 ) or Round( Clamp( self.r / r ) )
+	self.r = ( r == 0 and 0 ) or Clamp( self.r / r )
 	return self
 	
 end
@@ -493,7 +487,7 @@ function COLOR:DivG( g )
 	
 	assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = ( g == 0 and 0 ) or Round( Clamp( self.g / g ) )
+	self.g = ( g == 0 and 0 ) or Clamp( self.g / g )
 	return self
 	
 end
@@ -502,7 +496,7 @@ function COLOR:DivB( b )
 
 	assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = ( b == 0 and 0 ) or Round( Clamp( self.b / b ) )
+	self.b = ( b == 0 and 0 ) or Clamp( self.b / b )
 	return self
 	
 end
@@ -511,7 +505,7 @@ function COLOR:DivA( a )
 	
 	assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = ( a == 0 and 0 ) or Round( Clamp( self.a / a ) )
+	self.a = ( a == 0 and 0 ) or Clamp( self.a / a )
 	return self
 	
 end
