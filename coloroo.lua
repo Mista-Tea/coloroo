@@ -95,10 +95,10 @@ function Color( r, g, b, a )
 	
 	return setmetatable( 
 		{ 
-			r = ( r and Clamp( r ) ) or 255,
-			g = ( g and Clamp( g ) ) or 255,
-			b = ( b and Clamp( b ) ) or 255,
-			a = ( a and Clamp( a ) ) or 255 
+			r = ( r and Clamp( tonumber(r) ) ) or 255,
+			g = ( g and Clamp( tonumber(g) ) ) or 255,
+			b = ( b and Clamp( tonumber(b) ) ) or 255,
+			a = ( a and Clamp( tonumber(a) ) ) or 255 
 		}, 
 		COLOR 
 	)
@@ -343,28 +343,28 @@ end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetR( r )
 
-	self.r = Clamp( r )
+	self.r = Clamp( tonumber(r) )
 	return self
 
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetG( g )
 	
-	self.g = Clamp( g )
+	self.g = Clamp( tonumber(g) )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetB( b )
 
-	self.b = Clamp( b )
+	self.b = Clamp( tonumber(b) )
 	return self
 	
 end
 --[[----------------------------------------------------------------------]]--
 function COLOR:SetA( a )
 
-	self.a = Clamp( a )
+	self.a = Clamp( tonumber(a) )
 	return self
 
 end
@@ -385,7 +385,7 @@ function COLOR:AddR( r )
 	
 	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
 	
-	self.r = Clamp( self.r + r )
+	self.r = Clamp( self.r + tonumber(r) )
 	return self
 	
 end
@@ -394,7 +394,7 @@ function COLOR:AddG( g )
 
 	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Clamp( self.g + g )
+	self.g = Clamp( self.g + tonumber(g) )
 	return self
 	
 end
@@ -403,7 +403,7 @@ function COLOR:AddB( b )
 	
 	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Clamp( self.b + b )
+	self.b = Clamp( self.b + tonumber(b) )
 	return self
 	
 end
@@ -412,7 +412,7 @@ function COLOR:AddA( a )
 	
 	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Clamp( self.a + a )
+	self.a = Clamp( self.a + tonumber(a) )
 	return self
 	
 end
@@ -433,7 +433,7 @@ function COLOR:SubR( r )
 
 	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = Clamp( self.r - r )
+	self.r = Clamp( self.r - tonumber(r) )
 	return self
 	
 end
@@ -442,7 +442,7 @@ function COLOR:SubG( g )
 	
 	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Clamp( self.g - g )
+	self.g = Clamp( self.g - tonumber(g) )
 	return self
 	
 end
@@ -451,7 +451,7 @@ function COLOR:SubB( b )
 
 	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Clamp( self.b - b )
+	self.b = Clamp( self.b - tonumber(b) )
 	return self
 	
 end
@@ -460,7 +460,7 @@ function COLOR:SubA( a )
 	
 	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Clamp( self.a - a )
+	self.a = Clamp( self.a - tonumber(a) )
 	return self
 	
 end
@@ -481,7 +481,7 @@ function COLOR:MulR( r )
 
 	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
 
-	self.r = Clamp( self.r * r )
+	self.r = Clamp( self.r * tonumber(r) )
 	return self
 	
 end
@@ -490,7 +490,7 @@ function COLOR:MulG( g )
 	
 	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
 	
-	self.g = Clamp( self.g * g )
+	self.g = Clamp( self.g * tonumber(g) )
 	return self
 	
 end
@@ -499,7 +499,7 @@ function COLOR:MulB( b )
 
 	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
 	
-	self.b = Clamp( self.b * b )
+	self.b = Clamp( self.b * tonumber(b) )
 	return self
 	
 end
@@ -508,7 +508,7 @@ function COLOR:MulA( a )
 	
 	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
 	
-	self.a = Clamp( self.a * a )
+	self.a = Clamp( self.a * tonumber(a) )
 	return self
 	
 end
@@ -528,7 +528,7 @@ end
 function COLOR:DivR( r )
 
 	--assert( math.abs( r ) == r, "Parameter should be a positive number" )
-
+	r = tonumber( r )
 	self.r = ( r == 0 and 0 ) or Clamp( self.r / r )
 	return self
 	
@@ -537,7 +537,7 @@ end
 function COLOR:DivG( g )
 	
 	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
-	
+	r = tonumber( g )
 	self.g = ( g == 0 and 0 ) or Clamp( self.g / g )
 	return self
 	
@@ -546,7 +546,7 @@ end
 function COLOR:DivB( b )
 
 	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
-	
+	r = tonumber( b )
 	self.b = ( b == 0 and 0 ) or Clamp( self.b / b )
 	return self
 	
@@ -555,7 +555,7 @@ end
 function COLOR:DivA( a )
 	
 	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
-	
+	r = tonumber( a )
 	self.a = ( a == 0 and 0 ) or Clamp( self.a / a )
 	return self
 	
