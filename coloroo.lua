@@ -375,9 +375,9 @@ function COLOR.__div( lhs, rhs )
 	local r2, g2, b2, a2 = operations[ rhsType ]( rhs )
 	
 	return Color( 
-		r1 / r2, 
-		g1 / g2, 
-		b1 / b2
+		( r1 == 0 or r2 == 0 and 0 ) or r1 / r2, 
+		( g1 == 0 or g2 == 0 and 0 ) or g1 / g2, 
+		( b1 == 0 or b2 == 0 and 0 ) or b1 / b2
 	)
 
 end
