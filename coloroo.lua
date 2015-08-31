@@ -480,7 +480,7 @@ end
 --]]--
 function COLOR.__tostring( lhs )
 
-	return string.format( "(%u,\t%u,\t%u,\t%u)", lhs.r, lhs.g, lhs.b, lhs.a )
+	return string.format( "(%3u, %3u, %3u, %3u)", lhs.r, lhs.g, lhs.b, lhs.a )
 
 end
 
