@@ -56,6 +56,9 @@
 			Removed alpha value from arithmetic operations
 			Added ColorObj:Set()/Add()/Sub()/Mul()/Div()
 			Removed asserts in ColorObj:Set()/Add*()/Sub*()/Mul*()/Div*()
+		- August 30th, 2015:
+			Adding support for passing strings instead of numbers
+			Cleaning up tostring output
 ----------------------------------------------------------------------------]]
 
 --[[--------------------------------------------------------------------------
@@ -537,7 +540,7 @@ end
 function COLOR:DivG( g )
 	
 	--assert( math.abs( g ) == g, "Parameter should be a positive number" )
-	r = tonumber( g )
+	g = tonumber( g )
 	self.g = ( g == 0 and 0 ) or Clamp( self.g / g )
 	return self
 	
@@ -546,7 +549,7 @@ end
 function COLOR:DivB( b )
 
 	--assert( math.abs( b ) == b, "Parameter should be a positive number" )
-	r = tonumber( b )
+	b = tonumber( b )
 	self.b = ( b == 0 and 0 ) or Clamp( self.b / b )
 	return self
 	
@@ -555,7 +558,7 @@ end
 function COLOR:DivA( a )
 	
 	--assert( math.abs( a ) == a, "Parameter should be a positive number" )
-	r = tonumber( a )
+	a = tonumber( a )
 	self.a = ( a == 0 and 0 ) or Clamp( self.a / a )
 	return self
 	
