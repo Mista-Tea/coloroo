@@ -655,20 +655,6 @@ end
 
 --[[--------------------------------------------------------------------------
 --
--- 	ColorObj:SetAlpha( number )
---
---	Wrapper function for Color():SetA()
---
---	Sets this Color's 'a' value to the given number, clamped between 0 and 255.
---]]--
-function COLOR:SetAlpha( a )
-	
-	return self:SetA( a )
-	
-end
-
---[[--------------------------------------------------------------------------
---
 --  ColorObj:Set( number, number, number, number )
 -- 	ColorObj:SetR( number )
 --	ColorObj:SetG( number )
@@ -694,6 +680,19 @@ function COLOR:Set( r, g, b, a )
 	if ( b ) then self:SetB( b ) end
 	if ( a ) then self:SetA( a ) end
 	return self
+	
+end
+--[[--------------------------------------------------------------------------
+--
+-- 	ColorObj:SetAlpha( number )
+--
+--	Wrapper function for Color():SetA()
+--
+--	Sets this Color's 'a' value to the given number, clamped between 0 and 255.
+--]]--
+function COLOR:SetAlpha( a )
+	
+	return self:SetA( a )
 	
 end
 --[[----------------------------------------------------------------------]]--
